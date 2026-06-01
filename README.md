@@ -1,4 +1,4 @@
-## 📱 Üniversite Topluluk Ajandası Mobil Uygulaması
+# 📱 Üniversite Topluluk Ajandası Mobil Uygulaması
 
 Bu proje, üniversite öğrenci topluluklarının iç koordinasyonunu, komite yönetimini, görev dağılımlarını ve zirve organizasyonlarını tek bir merkezden sürdürülebilir kılmak amacıyla geliştirilmiş, **tamamen yerel (native) ve veri kalıcılığına sahip bir mobil ajanda uygulamasıdır.** 
 
