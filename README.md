@@ -69,8 +69,8 @@ Uygulamanın veri dolu ve çalışır vaziyette test edilebilmesi için veritaba
 | Rol | Kullanıcı Adı | Şifre | Erişim Yetkisi |
 | :--- | :--- | :--- | :--- |
 | **Kampüs Elçisi (Lider)** | `elci` | `elci12345` | Global Liderlik Portalı, Duyuru Yayını, Tüm Görevler |
-| **Etkinlik Üyesi** | `sevval` | `sevval123` | Etkinlik & Organizasyon Komitesi Özel Sayfası |
-| **Sponsorluk Üyesi** | `berke` | `berke123` | Sponsorluk & İş Geliştirme Komitesi Özel Sayfası |
+| **Etkinlik Üyesi** | `etkinlik` | `etkinlik123` | Etkinlik & Organizasyon Komitesi Özel Sayfası |
+| **Sponsorluk Üyesi** | `sponsorluk` | `sponsorluk123` | Sponsorluk & İş Geliştirme Komitesi Özel Sayfası |
 
 ---
 
@@ -84,7 +84,7 @@ Uygulamanın veri dolu ve çalışır vaziyette test edilebilmesi için veritaba
 ### Çalıştırma Adımları
 1. Proje dizinine gidin:
    ```bash
-   cd topluluk_ajandasi
+   cd Fluxora
    ```
 2. Bağımlılıkları yükleyin:
    ```bash
