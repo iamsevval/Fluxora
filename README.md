@@ -47,17 +47,57 @@ Uygulama, her komitenin özgün ihtiyaçlarına göre tasarlanmış akıllı ara
 
 ## 🛠️ Teknik Altyapı ve Veri Kalıcılığı
 
-### Yerel SQLite Mimarisi
-Projenin veritabanı motoru SQLite (`sqflite`) kütüphanesine dayanmaktadır. Uygulama veritabanı şeması kapsamlı ve normalize edilmiştir:
-- `users`: Kullanıcı hesapları, şifreler, birincil komiteler ve onboarding flag'leri.
-- `events`: Atanan kişi, komite ve tamamlanma durumlarını tutan etkinlik/görev tablosu.
-- `committee_items`: Markalar, içerik planları ve katılım takipleri için esnek veri yapısı.
-- `sponsorship_packages`: Gelişmiş sponsorluk paket detayları tablosu.
-- `reels_drafts`: Reels video taslak parametreleri ve viral skorları tablosu.
-- `stream_questions`: Canlı yayın soru havuzu tablosu.
-- `event_duties`: Organizasyon günü görev matrisi tablosu.
-- `announcements`: Kampüs elçisi duyuruları tablosu.
-- `app_settings`: Kullanıcı tema (Dark/Light Mode) tercihlerini saklayan ayarlar tablosu.
+### 📂 1. Proje Mimarisi ve Dosya Yapısı
+Uygulama, Flutter geliştirme standartlarına uygun olarak Clean Architecture (Temiz Mimari) prensipleri doğrultusunda modüler bir yapıya sahiptir. Projede kodların okunabilirliğini ve bakımını kolaylaştırmak için veri modelleri, veritabanı katmanı ve kullanıcı arayüzü (UI) tamamen birbirinden ayrılmıştır.
+
+```
+lib/
+│
+├── main.dart                      # Uygulamanın giriş noktası (Giriş kontrolü ve Tema yükleme)
+│
+├── database/
+│   └── db_helper.dart             # SQLite veritabanı bağlantısı, şema kurulumu ve CRUD metotları
+│
+├── models/                        # SQLite tabloları için Dart veri modelleri (Serialization)
+│   ├── announcement_model.dart    # Duyuru veri modeli
+│   ├── committee_item_model.dart  # Genel komite araçları modeli (Marka, Zirve kapasitesi vb.)
+│   ├── event_duty_model.dart      # Görev matrisi (Zaman/Alan dağılımı) modeli
+│   ├── event_model.dart           # Görev/Etkinlik veri modeli
+│   ├── reels_draft_model.dart     # Reels video taslağı ve viral skor modeli
+│   ├── sponsorship_package_model.dart # Sponsorluk paketi veri modeli
+│   ├── stream_question_model.dart # Canlı yayın soru havuzu modeli
+│   └── user_model.dart            # Kullanıcı ve rol modeli
+│
+└── screens/                       # Arayüz (Görsel Tasarım) ekranları
+    ├── splash_screen.dart         # Karşılama ve yönlendirme ekranı
+    ├── login_screen.dart          # Kullanıcı giriş ekranı (SQLite doğrulamalı)
+    ├── register_screen.dart       # Yeni üye kayıt ekranı (SQLite entegrasyonlu)
+    ├── home_screen.dart           # Ana ekran (Lider paneli, komite sekmeleri ve özel araçlar)
+    ├── add_event_screen.dart      # SQLite dinamik üye seçimli yeni görev ekleme ekranı
+    └── edit_event_screen.dart     # SQLite dinamik üye seçimli görev düzenleme ve silme ekranı
+```
+
+### 🗄️ 2. SQLite Veritabanı Mimarisi (`db_helper.dart`)
+Uygulamanın kalbini SQLite tabanlı `DbHelper` sınıfı oluşturur. Bu sınıf **Singleton Tasarım Deseni (Singleton Pattern)** kullanılarak yazılmıştır. Bu sayede uygulama genelinde veritabanına tek bir bağlantı kanalı açılır, gereksiz bellek tüketiminin ve veritabanı kilitlenmelerinin önüne geçilir.
+
+#### Veritabanı Tablo Şemaları
+
+| Tablo Adı | Görevi / Kolonları | Kritik Detaylar |
+| :--- | :--- | :--- |
+| **`users`** | `id`, `fullName`, `username` (UNIQUE), `password`, `primaryCommittee`, `isNewUser` | Kullanıcı kimlik doğrulama ve onboarding durumu. |
+| **`events`** | `id`, `title`, `date`, `location`, `description`, `committee`, `isCompleted`, `assignedTo` | Komite içi görevler. `assignedTo` kolonu ile `users` tablosundaki bir üyeye dinamik atama yapılır. |
+| **`announcements`** | `id`, `title`, `content`, `date`, `targetCommittee`, `isCompleted` | Kampüs Elçisinin yayınladığı duyurular. |
+| **`committee_items`** | `id`, `committee`, `type`, `title`, `subtitle`, `statusColor`, `isDone` | Komitelere özel dinamik veri takipleri (Marka görüşmeleri, bütçe takipleri, zirve doluluk durumu). |
+| **`sponsorship_packages`**| `id`, `packageName`, `budgetLimit`, `socialMediaPosts`, `logoBanner`, `standArea`, `totalPrice` | Sponsorluk Paket Hesaplayıcısının CRUD verileri. |
+| **`reels_drafts`** | `id`, `concept`, `duration`, `isTrendingMusic`, `hookStrength`, `calculatedViralScore`, `recommendations` | Reels Taslak Motorunun kaydettiği video verileri ve hesaplanan viral skorları. |
+| **`stream_questions`** | `id`, `guestName`, `questioner`, `questionText`, `isAsked`, `priority` | Canlı yayın soru havuzu verileri. |
+| **`event_duties`** | `id`, `staffName`, `dutyZone`, `timeSlot`, `status` | Zirve görev matrisindeki ekip görevleri. |
+| **`app_settings`** | `id` (PRIMARY KEY 1), `isDarkMode` (0 veya 1), `themeColor` | SQLite destekli kalıcı tema ayarları. |
+
+#### Veritabanı Yaşam Döngüsü (Lifecycle) Metotları
+- **`initDb()`:** Veritabanı dosyasını (`topluluk_v9.db`) cihaz hafızasında oluşturur veya var olan dosyaya bağlanır.
+- **`onCreate()`:** Veritabanı ilk kez oluşturulurken yukarıdaki 9 tabloyu SQL sorgularıyla kurar ve Seed Verileri (varsayılan kullanıcı `elci`, örnek duyurular, görev matrisi, taslak reels vb.) ekler. Hoca uygulamayı ilk açtığında boş ekran görmez, dolu ve çalışan bir sistemle karşılaşır.
+- **`onUpgrade()`:** İleride veritabanı şemasında güncelleme veya kolon ekleme gerektiğinde verileri kaybetmeden şemayı günceller.
 
 ---
 
