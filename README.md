@@ -1,5 +1,4 @@
-# 🎓 EFC304 Mobil Uygulama Tasarımı ve Geliştirme Final Projesi
-## 📱 Üniversite Topluluk Ajandası ve SQLite Tabanlı Eşgüdüm Sistemi
+## 📱 Üniversite Topluluk Ajandası Mobil Uygulaması
 
 Bu proje, üniversite öğrenci topluluklarının iç koordinasyonunu, komite yönetimini, görev dağılımlarını ve zirve organizasyonlarını tek bir merkezden sürdürülebilir kılmak amacıyla geliştirilmiş, **tamamen yerel (native) ve veri kalıcılığına sahip bir mobil ajanda uygulamasıdır.** 
 
@@ -49,7 +48,7 @@ Uygulama, her komitenin özgün ihtiyaçlarına göre tasarlanmış akıllı ara
 ## 🛠️ Teknik Altyapı ve Veri Kalıcılığı
 
 ### Yerel SQLite Mimarisi
-Projenin veritabanı motoru SQLite (`sqflite`) kütüphanesine dayanmaktadır. Uygulama veritabanı şeması son derece kapsamlı ve normalize edilmiştir:
+Projenin veritabanı motoru SQLite (`sqflite`) kütüphanesine dayanmaktadır. Uygulama veritabanı şeması kapsamlı ve normalize edilmiştir:
 - `users`: Kullanıcı hesapları, şifreler, birincil komiteler ve onboarding flag'leri.
 - `events`: Atanan kişi, komite ve tamamlanma durumlarını tutan etkinlik/görev tablosu.
 - `committee_items`: Markalar, içerik planları ve katılım takipleri için esnek veri yapısı.
