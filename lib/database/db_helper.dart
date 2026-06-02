@@ -326,6 +326,15 @@ class DbHelper {
     );
   }
 
+  Future<int> deleteUser(int userId) async {
+    var dbClient = await db;
+    return await dbClient.delete(
+      'users',
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
+  }
+
   // --- ETKİNLİK İŞLEMLERİ ---
 
   Future<int> insertEvent(Event event) async {

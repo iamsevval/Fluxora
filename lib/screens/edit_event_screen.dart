@@ -78,13 +78,24 @@ class _EditEventScreenState extends State<EditEventScreen> {
   }
 
   void _updateCurrentDateString() {
-    if (_selectedDate != null && _selectedTime != null) {
-      final formattedDate = DateFormat('dd MMMM yyyy', 'tr_TR').format(_selectedDate!);
-      final formattedTime = _selectedTime!.format(context);
-      setState(() {
-        _currentDateString = '$formattedDate, $formattedTime';
-      });
+    List<String> parts = widget.event.date.split(', ');
+    String datePart = parts.isNotEmpty ? parts[0] : '';
+    String timePart = parts.length > 1 ? parts[1] : '';
+
+    if (_selectedDate != null) {
+      datePart = DateFormat('dd MMMM yyyy', 'tr_TR').format(_selectedDate!);
     }
+    if (_selectedTime != null) {
+      timePart = _selectedTime!.format(context);
+    }
+
+    setState(() {
+      if (timePart.isNotEmpty) {
+        _currentDateString = '$datePart, $timePart';
+      } else {
+        _currentDateString = datePart;
+      }
+    });
   }
 
   void _updateEvent() async {
@@ -163,6 +174,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
             // --- KOMİTE SEÇİCİ ---
             DropdownButtonFormField<String>(
+              isExpanded: true,
               value: _currentCommittee,
               decoration: const InputDecoration(
                 labelText: 'İlgili Komite',
@@ -265,6 +277,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
             // --- GÖREVLENDİRİLEN KİŞİ SEÇİCİ ---
             DropdownButtonFormField<String>(
+              isExpanded: true,
               value: _selectedUser,
               decoration: const InputDecoration(
                 labelText: 'Görevi Atayacağın Kişi (Opsiyonel)',

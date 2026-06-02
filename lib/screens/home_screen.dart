@@ -778,7 +778,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 8),
-              const Text('Durumu değiştirmek için tıklayın, silmek için basılı tutun.', style: TextStyle(color: Colors.grey, fontSize: 11)),
+              const SizedBox(height: 8),
+              const Text('Düzenlemek için tıklayın, silmek için basılı tutun.', style: TextStyle(color: Colors.grey, fontSize: 11)),
               const SizedBox(height: 15),
               _committeeBrands.isEmpty
                   ? const Center(child: Text('Henüz marka eklenmemiş.', style: TextStyle(color: Colors.grey, fontSize: 13)))
@@ -791,7 +792,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           final item = _committeeBrands[index];
                           final colorVal = int.tryParse(item.statusColor) ?? 0xFF9E9E9E;
                           return GestureDetector(
-                            onTap: () => _toggleBrandStatus(item),
+                            onTap: () => _showEditBrandDialog(item),
                             onLongPress: () => _deleteCommitteeItemConfirm(item),
                             child: Container(
                               width: 125,
@@ -989,9 +990,72 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showEditBrandDialog(CommitteeItem item) {
+    final controller = TextEditingController(text: item.title);
+    String status = item.subtitle;
+    if (!['Görüşülüyor', 'Onaylandı', 'Beklemede'].contains(status)) status = 'Beklemede';
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Marka Görüşmesini Düzenle'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: controller,
+                decoration: const InputDecoration(labelText: 'Görüşülen Marka Adı'),
+              ),
+              const SizedBox(height: 15),
+              DropdownButtonFormField<String>(
+                value: status,
+                items: ['Görüşülüyor', 'Onaylandı', 'Beklemede'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                onChanged: (val) {
+                  setDialogState(() => status = val!);
+                },
+                decoration: const InputDecoration(labelText: 'Görüşme Durumu'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('İptal', style: TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: widget.committeeColor, foregroundColor: Colors.white),
+              onPressed: () async {
+                if (controller.text.trim().isNotEmpty) {
+                  item.title = controller.text.trim();
+                  item.subtitle = status;
+                  if (status == 'Görüşülüyor') {
+                    item.statusColor = '0xFFFF9800';
+                  } else if (status == 'Onaylandı') {
+                    item.statusColor = '0xFF4CAF50';
+                  } else {
+                    item.statusColor = '0xFF9E9E9E';
+                  }
+                  await _dbHelper.updateCommitteeItem(item);
+                  _refreshCommitteeItems();
+                  if (mounted) Navigator.pop(context);
+                } else {
+                  _showErrorSnackBar('Marka adı boş bırakılamaz.');
+                }
+              },
+              child: const Text('Kaydet'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showSponsorshipPackageWizard() {
     final nameController = TextEditingController();
-    double budgetLimit = 15000.0;
+    final customPriceController = TextEditingController();
+    double budgetLimit = 5000.0;
     int socialMediaPosts = 2;
     bool logoBanner = true;
     bool standArea = false;
@@ -1000,7 +1064,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
-          double totalPrice = budgetLimit + (socialMediaPosts * 2500) + (logoBanner ? 5000 : 0) + (standArea ? 10000 : 0);
+          double totalPrice = budgetLimit + (socialMediaPosts * 500) + (logoBanner ? 1500 : 0) + (standArea ? 3000 : 0);
 
           return AlertDialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -1017,8 +1081,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text('Taban Bütçe Limiti: ₺${budgetLimit.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                   Slider(
                     value: budgetLimit,
-                    min: 5000,
-                    max: 100000,
+                    min: 1000,
+                    max: 20000,
                     divisions: 19,
                     activeColor: widget.committeeColor,
                     onChanged: (val) {
@@ -1058,6 +1122,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'Hesaplanan Değer: ₺${totalPrice.toInt()}',
                     style: TextStyle(color: widget.committeeColor, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 15),
+                  TextField(
+                    controller: customPriceController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Nihai Anlaşılan Tutar (₺) - Opsiyonel',
+                      prefixIcon: Icon(Icons.monetization_on_outlined),
+                    ),
                   )
                 ],
               ),
@@ -1072,13 +1145,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () async {
                   final name = nameController.text.trim();
                   if (name.isNotEmpty) {
+                    final enteredPrice = double.tryParse(customPriceController.text.trim());
+                    final finalPrice = enteredPrice ?? totalPrice;
                     final newPkg = SponsorshipPackage(
                       packageName: name,
                       budgetLimit: budgetLimit,
                       socialMediaPosts: socialMediaPosts,
                       logoBanner: logoBanner ? 1 : 0,
                       standArea: standArea ? 1 : 0,
-                      totalPrice: totalPrice,
+                      totalPrice: finalPrice,
                     );
                     await _dbHelper.insertSponsorshipPackage(newPkg);
                     _refreshCommitteeItems();
@@ -1098,6 +1173,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showEditSponsorshipPackageWizard(SponsorshipPackage pkg) {
     final nameController = TextEditingController(text: pkg.packageName);
+    final customPriceController = TextEditingController(text: pkg.totalPrice.toInt().toString());
     double budgetLimit = pkg.budgetLimit;
     int socialMediaPosts = pkg.socialMediaPosts;
     bool logoBanner = pkg.logoBanner == 1;
@@ -1107,7 +1183,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
-          double totalPrice = budgetLimit + (socialMediaPosts * 2500) + (logoBanner ? 5000 : 0) + (standArea ? 10000 : 0);
+          double totalPrice = budgetLimit + (socialMediaPosts * 500) + (logoBanner ? 1500 : 0) + (standArea ? 3000 : 0);
 
           return AlertDialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -1124,8 +1200,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text('Taban Bütçe Limiti: ₺${budgetLimit.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                   Slider(
                     value: budgetLimit,
-                    min: 5000,
-                    max: 100000,
+                    min: 1000,
+                    max: 20000,
                     divisions: 19,
                     activeColor: widget.committeeColor,
                     onChanged: (val) {
@@ -1165,6 +1241,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     'Hesaplanan Değer: ₺${totalPrice.toInt()}',
                     style: TextStyle(color: widget.committeeColor, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 15),
+                  TextField(
+                    controller: customPriceController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Nihai Anlaşılan Tutar (₺)',
+                      prefixIcon: Icon(Icons.monetization_on_outlined),
+                    ),
                   )
                 ],
               ),
@@ -1184,7 +1269,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     pkg.socialMediaPosts = socialMediaPosts;
                     pkg.logoBanner = logoBanner ? 1 : 0;
                     pkg.standArea = standArea ? 1 : 0;
-                    pkg.totalPrice = totalPrice;
+                    final enteredPrice = double.tryParse(customPriceController.text.trim());
+                    pkg.totalPrice = enteredPrice ?? totalPrice;
                     
                     await _dbHelper.updateSponsorshipPackage(pkg);
                     _refreshCommitteeItems();
@@ -1229,6 +1315,23 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildMediaWidgets(Color cardColor) {
     final textColor = _isDarkMode ? Colors.white : Colors.black87;
 
+    int getDayOrder(String dayName) {
+      final d = dayName.toLowerCase().trim();
+      if (d == 'pazartesi') return 1;
+      if (d == 'salı' || d == 'sali') return 2;
+      if (d.contains('çar') || d.contains('car')) return 3;
+      if (d.contains('per')) return 4;
+      if (d == 'cuma') return 5;
+      if (d == 'cumartesi') return 6;
+      if (d == 'pazar') return 7;
+      return 99;
+    }
+
+    final sortedContents = List<CommitteeItem>.from(_committeeContents);
+    sortedContents.sort((a, b) {
+      return getDayOrder(a.title).compareTo(getDayOrder(b.title));
+    });
+
     return Column(
       children: [
         // İçerik Takvimi
@@ -1248,14 +1351,14 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 8),
               const Text('Silmek için içeriğe basılı tutabilirsiniz.', style: TextStyle(color: Colors.grey, fontSize: 11)),
               const SizedBox(height: 15),
-              _committeeContents.isEmpty
+              sortedContents.isEmpty
                   ? const Center(child: Text('Henüz içerik planlanmamış.', style: TextStyle(color: Colors.grey, fontSize: 13)))
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _committeeContents.length,
+                      itemCount: sortedContents.length,
                       itemBuilder: (context, index) {
-                        final item = _committeeContents[index];
+                        final item = sortedContents[index];
                         IconData contentIcon = Icons.image;
                         if (item.subtitle.toLowerCase().contains('reels') || item.subtitle.toLowerCase().contains('video')) {
                           contentIcon = Icons.video_collection;
@@ -2510,7 +2613,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  )
+                                  ),
+                                  const SizedBox(width: 8),
+                                  GestureDetector(
+                                    onTap: () => _showEditChecklistDialog(item),
+                                    child: const Icon(Icons.edit_outlined, color: Colors.blueGrey, size: 18),
+                                  ),
                                 ],
                               ),
                             ),
@@ -2667,8 +2775,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showAddDutyDialog() {
     final staffController = TextEditingController();
+    final timeController = TextEditingController(text: '09:00 - 12:00');
     String dutyZone = 'Karşılama';
-    String timeSlot = '09:00 - 12:00';
     String status = 'Görevde';
 
     showDialog(
@@ -2694,13 +2802,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: const InputDecoration(labelText: 'Görev Alanı'),
               ),
               const SizedBox(height: 10),
-              DropdownButtonFormField<String>(
-                value: timeSlot,
-                items: ['09:00 - 12:00', '12:00 - 15:00', '15:00 - 18:00']
-                    .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                    .toList(),
-                onChanged: (val) => setDialogState(() => timeSlot = val!),
-                decoration: const InputDecoration(labelText: 'Zaman Aralığı'),
+              TextField(
+                controller: timeController,
+                decoration: const InputDecoration(labelText: 'Zaman Aralığı (Örn: 09:00 - 12:00)'),
               ),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
@@ -2723,7 +2827,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   final newDuty = EventDuty(
                     staffName: name,
                     dutyZone: dutyZone,
-                    timeSlot: timeSlot,
+                    timeSlot: timeController.text.trim(),
                     status: status,
                   );
                   await _dbHelper.insertEventDuty(newDuty);
@@ -2794,6 +2898,63 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
               child: const Text('Ekle'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditChecklistDialog(CommitteeItem item) {
+    final controller = TextEditingController(text: item.title);
+    String priority = item.subtitle;
+    if (!['Acil', 'Öncelikli', 'Normal'].contains(priority)) priority = 'Normal';
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('İhtiyacı Düzenle'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: controller,
+                decoration: const InputDecoration(labelText: 'İhtiyaç / Malzeme Adı'),
+              ),
+              const SizedBox(height: 15),
+              DropdownButtonFormField<String>(
+                value: priority,
+                items: ['Acil', 'Öncelikli', 'Normal'].map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                onChanged: (val) {
+                  setDialogState(() {
+                    priority = val!;
+                  });
+                },
+                decoration: const InputDecoration(labelText: 'Öncelik Derecesi'),
+              )
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('İptal', style: TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: widget.committeeColor, foregroundColor: Colors.white),
+              onPressed: () async {
+                if (controller.text.trim().isNotEmpty) {
+                  item.title = controller.text.trim();
+                  item.subtitle = priority;
+                  await _dbHelper.updateCommitteeItem(item);
+                  _refreshCommitteeItems();
+                  if (mounted) Navigator.pop(context);
+                } else {
+                  _showErrorSnackBar('İhtiyaç adı boş bırakılamaz.');
+                }
+              },
+              child: const Text('Kaydet'),
             )
           ],
         ),
@@ -3549,6 +3710,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 15),
 
                   DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: _selectedAnnTarget,
                     decoration: const InputDecoration(
                       labelText: 'Hedef Komite',
@@ -3647,20 +3809,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF3949AB).withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      ann.targetCommittee,
-                                      style: const TextStyle(color: Color(0xFF3949AB), fontWeight: FontWeight.bold, fontSize: 10),
-                                    ),
-                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF3949AB).withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Text(
+                                            ann.targetCommittee,
+                                            style: const TextStyle(color: Color(0xFF3949AB), fontWeight: FontWeight.bold, fontSize: 10),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
                                   Row(
                                     children: [
                                       IconButton(
@@ -3679,6 +3845,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       const SizedBox(width: 8),
                                       Text(ann.date, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+                                      const SizedBox(width: 8),
+                                      IconButton(
+                                        icon: const Icon(Icons.edit_outlined, color: Colors.blue, size: 20),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () => _showEditAnnouncementDialog(ann),
+                                      ),
                                       const SizedBox(width: 8),
                                       IconButton(
                                         icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
@@ -3724,6 +3897,82 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 80),
         ],
       ),
+    );
+  }
+
+  void _showEditAnnouncementDialog(Announcement ann) {
+    final titleController = TextEditingController(text: ann.title);
+    final contentController = TextEditingController(text: ann.content);
+    String selectedTarget = ann.targetCommittee;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: const Text('Duyuruyu Düzenle', style: TextStyle(color: Color(0xFF3949AB), fontWeight: FontWeight.bold)),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: const InputDecoration(labelText: 'Başlık', prefixIcon: Icon(Icons.title)),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: contentController,
+                      maxLines: 3,
+                      decoration: const InputDecoration(labelText: 'İçerik', prefixIcon: Icon(Icons.description)),
+                    ),
+                    const SizedBox(height: 10),
+                    DropdownButtonFormField<String>(
+                      isExpanded: true,
+                      value: selectedTarget,
+                      decoration: const InputDecoration(labelText: 'Hedef Komite', prefixIcon: Icon(Icons.group)),
+                      items: const [
+                        DropdownMenuItem(value: 'Tüm Komiteler', child: Text('Tüm Komiteler')),
+                        DropdownMenuItem(value: 'Sponsorluk & İş Geliştirme', child: Text('Sponsorluk & İş Geliştirme')),
+                        DropdownMenuItem(value: 'Dijital Medya & Tasarım', child: Text('Dijital Medya & Tasarım')),
+                        DropdownMenuItem(value: 'Medium & YouTube', child: Text('Medium & YouTube')),
+                        DropdownMenuItem(value: 'Etkinlik & Organizasyon', child: Text('Etkinlik & Organizasyon')),
+                      ],
+                      onChanged: (val) {
+                        if (val != null) setDialogState(() => selectedTarget = val);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('İptal', style: TextStyle(color: Colors.grey)),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF3949AB),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () async {
+                    if (titleController.text.trim().isEmpty || contentController.text.trim().isEmpty) return;
+                    ann.title = titleController.text.trim();
+                    ann.content = contentController.text.trim();
+                    ann.targetCommittee = selectedTarget;
+                    await _dbHelper.updateAnnouncement(ann);
+                    if (context.mounted) Navigator.pop(context);
+                    _refreshEvents();
+                  },
+                  child: const Text('Kaydet'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -3818,6 +4067,50 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()),
                 (route) => false,
+              );
+            },
+          ),
+          const SizedBox(height: 10),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+              child: const Icon(Icons.person_remove, color: Colors.red),
+            ),
+            title: const Text('Hesabımı Sil', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+            subtitle: const Text('Bu işlem geri alınamaz.', style: TextStyle(fontSize: 11, color: Colors.grey)),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  title: const Text('Hesabı Sil', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                  content: const Text('Hesabınızı sistemden kalıcı olarak silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('İptal', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () async {
+                        await _dbHelper.deleteUser(widget.user.id!);
+                        if (context.mounted) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                            (route) => false,
+                          );
+                        }
+                      },
+                      child: const Text('Kalıcı Olarak Sil', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
               );
             },
           ),

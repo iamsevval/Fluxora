@@ -116,9 +116,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Lütfen adınızı ve soyadınızı girin';
                     }
-                    final nameRegExp = RegExp(r"^[a-zA-ZğüşıöçĞÜŞİÖÇ]+(?:\s+[a-zA-ZğüşıöçĞÜŞİÖÇ]+)+$");
+                    final nameRegExp = RegExp(r"^[a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]+(?:\s+[a-zA-Z0-9ğüşıöçĞÜŞİÖÇ]+)+$");
                     if (!nameRegExp.hasMatch(value.trim())) {
-                      return 'Lütfen en az ad ve soyadınızı girin (örn: Ahmet Yılmaz)';
+                      return 'Lütfen en az iki kelime girin (Harf ve rakam içerebilir)';
                     }
                     return null;
                   },
