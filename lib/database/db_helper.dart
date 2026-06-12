@@ -51,7 +51,7 @@ class DbHelper {
           )
         ''');
 
-        // 3. Komite Özel Araçlar Tablosu (Eski Tablo)
+        // 3. Komite Özel Araçlar Tablosu 
         await db.execute('''
           CREATE TABLE committee_items(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -151,7 +151,6 @@ class DbHelper {
           'isNewUser': 0,
         });
 
-        // Rapor ekran görüntüleriyle uyumlu olması için diğer komite kullanıcıları seeding
         await db.insert('users', {
           'fullName': 'tasarim uyesi',
           'username': 'tasarim_uyesi1',
@@ -216,7 +215,6 @@ class DbHelper {
           'targetCommittee': 'Sponsorluk & İş Geliştirme',
         });
 
-        // Rapor ekran görüntüleriyle birebir uyumlu Örnek Etkinlikler (Events) Seeding
         await db.insert('events', {
           'title': 'Tanışma Toplantısı Reels Kurgusu',
           'date': '01 Haziran 2026, 19:25',
@@ -373,7 +371,6 @@ class DbHelper {
           'isDone': 0,
         });
 
-        // Rapor ekran görüntüleriyle birebir uyumlu Etkinlik & Organizasyon Checklist ve Zirve Kapasitesi
         await db.insert('committee_items', {
           'committee': 'Etkinlik & Organizasyon',
           'type': 'checklist',
