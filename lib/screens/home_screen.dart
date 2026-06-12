@@ -930,7 +930,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _toggleBrandStatus(CommitteeItem item) async {
+  void toggleBrandStatus(CommitteeItem item) async {
     String newStatus;
     String newColor;
     if (item.subtitle == 'Görüşülüyor') {
