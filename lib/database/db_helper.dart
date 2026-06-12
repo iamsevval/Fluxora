@@ -19,8 +19,8 @@ class DbHelper {
   }
 
   initDb() async {
-    // Sürüm yükseltmesi ve dinamik zirve silme özellikleri için topluluk_v9.db kullanıyoruz
-    String path = join(await getDatabasesPath(), 'topluluk_v9.db');
+    // Sürüm yükseltmesi ve dinamik zirve silme özellikleri için topluluk_v12.db kullanıyoruz
+    String path = join(await getDatabasesPath(), 'topluluk_v12.db');
     return await openDatabase(
       path, 
       version: 7, 
@@ -151,6 +151,57 @@ class DbHelper {
           'isNewUser': 0,
         });
 
+        // Rapor ekran görüntüleriyle uyumlu olması için diğer komite kullanıcıları seeding
+        await db.insert('users', {
+          'fullName': 'tasarim uyesi',
+          'username': 'tasarim_uyesi1',
+          'password': '123',
+          'primaryCommittee': 'Dijital Medya & Tasarım',
+          'isNewUser': 0,
+        });
+        await db.insert('users', {
+          'fullName': 'tasarim uyesi2',
+          'username': 'tasarim_uyesi2',
+          'password': '123',
+          'primaryCommittee': 'Dijital Medya & Tasarım',
+          'isNewUser': 0,
+        });
+        await db.insert('users', {
+          'fullName': 'medium uyesi',
+          'username': 'medium_uyesi1',
+          'password': '123',
+          'primaryCommittee': 'Medium & YouTube',
+          'isNewUser': 0,
+        });
+        await db.insert('users', {
+          'fullName': 'medium uyesi2',
+          'username': 'medium_uyesi2',
+          'password': '123',
+          'primaryCommittee': 'Medium & YouTube',
+          'isNewUser': 0,
+        });
+        await db.insert('users', {
+          'fullName': 'sponsorluk uyesi',
+          'username': 'sponsorluk_uyesi',
+          'password': '123',
+          'primaryCommittee': 'Sponsorluk & İş Geliştirme',
+          'isNewUser': 0,
+        });
+        await db.insert('users', {
+          'fullName': 'elci yardimcisi',
+          'username': 'elci_yardimcisi',
+          'password': '123',
+          'primaryCommittee': 'Kampüs Elçisi',
+          'isNewUser': 0,
+        });
+        await db.insert('users', {
+          'fullName': 'etkinlik uyesi',
+          'username': 'etkinlik_uyesi',
+          'password': '123',
+          'primaryCommittee': 'Etkinlik & Organizasyon',
+          'isNewUser': 0,
+        });
+
         // Örnek Elçi Duyuruları seeding
         await db.insert('announcements', {
           'title': 'Haftalık Eşgüdüm Toplantısı',
@@ -163,6 +214,127 @@ class DbHelper {
           'content': 'Sponsorluk görüşmelerinde taban paket bütçemizi ₺20,000 seviyesine çektik. Lütfen güncel paket hesaplayıcısını kullanın.',
           'date': '2026-06-01',
           'targetCommittee': 'Sponsorluk & İş Geliştirme',
+        });
+
+        // Rapor ekran görüntüleriyle birebir uyumlu Örnek Etkinlikler (Events) Seeding
+        await db.insert('events', {
+          'title': 'Tanışma Toplantısı Reels Kurgusu',
+          'date': '01 Haziran 2026, 19:25',
+          'location': 'online',
+          'description': 'Tüm yeni üyelerle tanışma ve reels kurgu planlaması.',
+          'committee': 'Dijital Medya & Tasarım',
+          'isCompleted': 1,
+          'assignedTo': 'tasarim uyesi'
+        });
+
+        await db.insert('events', {
+          'title': 'VIP ve Katılımcı Yaka Kartları',
+          'date': '10 Haziran 2026, 13:38',
+          'location': 'yuz yuze',
+          'description': 'Zirveye katılacak olan VIP konukların yaka kartlarının tasarımı ve basımı.',
+          'committee': 'Dijital Medya & Tasarım',
+          'isCompleted': 0,
+          'assignedTo': 'tasarim uyesi2'
+        });
+
+        await db.insert('events', {
+          'title': 'Trend Yazılım Makalesi',
+          'date': '08 Haziran 2026, 19:41',
+          'location': 'online',
+          'description': 'Medium kanalımızda yayınlanacak haftalık yazılım dünyasındaki trendler makalesi.',
+          'committee': 'Medium & YouTube',
+          'isCompleted': 1,
+          'assignedTo': 'medium uyesi2'
+        });
+
+        await db.insert('events', {
+          'title': 'Etkinlik Öncesi Röportaj Çekimi',
+          'date': '10 Haziran 2026, 13:45',
+          'location': 'yuz yuze',
+          'description': 'Zirve öncesi konuşmacılarla yapılacak röportaj çekimleri.',
+          'committee': 'Medium & YouTube',
+          'isCompleted': 1,
+          'assignedTo': 'medium uyesi2'
+        });
+
+        await db.insert('events', {
+          'title': 'YouTube Thumbnail (Kapak) Revizesi',
+          'date': '12 Haziran 2026, 15:00',
+          'location': 'online',
+          'description': 'Son videonun kapak resminin revize edilmesi.',
+          'committee': 'Medium & YouTube',
+          'isCompleted': 0,
+          'assignedTo': 'medium uyesi'
+        });
+
+        await db.insert('events', {
+          'title': 'Zirve Konuşmacı Duyuruları (Carousel)',
+          'date': '03 Haziran 2026, 18:15',
+          'location': 'yuz yuze',
+          'description': 'Zirve konuşmacılarının sosyal medya duyuru tasarımları.',
+          'committee': 'Dijital Medya & Tasarım',
+          'isCompleted': 0,
+          'assignedTo': 'tasarim uyesi'
+        });
+
+        await db.insert('events', {
+          'title': 'Taban Sponsorluk Dosyası Hazırlığı',
+          'date': '28 Mayıs 2026, 14:00',
+          'location': 'yuz yuze',
+          'description': 'Markalarla paylaşılacak taban sponsorluk teklif sunum dosyası.',
+          'committee': 'Sponsorluk & İş Geliştirme',
+          'isCompleted': 1,
+          'assignedTo': 'sponsorluk uyesi'
+        });
+
+        await db.insert('events', {
+          'title': 'Sponsorluk Sunumu Revizyonu',
+          'date': '02 Haziran 2026, 11:30',
+          'location': 'online',
+          'description': 'Gelen geri bildirimlere göre sponsorluk sunum slaytlarının güncellenmesi.',
+          'committee': 'Sponsorluk & İş Geliştirme',
+          'isCompleted': 1,
+          'assignedTo': 'sponsorluk uyesi'
+        });
+
+        await db.insert('events', {
+          'title': 'Sponsor Görüşmeleri Planlaması',
+          'date': '15 Haziran 2026, 10:00',
+          'location': 'yuz yuze',
+          'description': 'Ana sponsor adayları ile yapılacak yüz yüze toplantıların takvimi.',
+          'committee': 'Sponsorluk & İş Geliştirme',
+          'isCompleted': 0,
+          'assignedTo': 'sponsorluk uyesi'
+        });
+
+        await db.insert('events', {
+          'title': 'Zirve Sunum Akışı Planlama',
+          'date': '05 Haziran 2026, 13:00',
+          'location': 'yuz yuze',
+          'description': 'Ana sahne sunum akışı ve saat planlarının detaylandırılması.',
+          'committee': 'Etkinlik & Organizasyon',
+          'isCompleted': 1,
+          'assignedTo': 'etkinlik uyesi'
+        });
+
+        await db.insert('events', {
+          'title': 'Konuşmacı Otel Rezervasyonları',
+          'date': '07 Haziran 2026, 17:00',
+          'location': 'online',
+          'description': 'Şehir dışından gelecek konuşmacıların otel konaklama rezervasyonlarının tamamlanması.',
+          'committee': 'Etkinlik & Organizasyon',
+          'isCompleted': 1,
+          'assignedTo': 'etkinlik uyesi'
+        });
+
+        await db.insert('events', {
+          'title': 'Katılımcı Kayıt Formu Oluşturulması',
+          'date': '09 Haziran 2026, 10:00',
+          'location': 'online',
+          'description': 'Kayıt formunun hazırlanıp yayına alınması ve katılım kontrolü.',
+          'committee': 'Etkinlik & Organizasyon',
+          'isCompleted': 1,
+          'assignedTo': 'etkinlik uyesi'
         });
 
         // Temel Komite Araçları Seeding
@@ -201,21 +373,57 @@ class DbHelper {
           'isDone': 0,
         });
 
+        // Rapor ekran görüntüleriyle birebir uyumlu Etkinlik & Organizasyon Checklist ve Zirve Kapasitesi
         await db.insert('committee_items', {
           'committee': 'Etkinlik & Organizasyon',
           'type': 'checklist',
           'title': 'Yaka Kartları Basımı',
           'subtitle': 'Acil',
-          'statusColor': '0xFFFF9800',
+          'statusColor': '0xFF4CAF50', // Yeşil
           'isDone': 1,
         });
 
-        // Dynamic Summit Capacity Seeding (Only created once on DB creation, so user can safely delete it)
+        await db.insert('committee_items', {
+          'committee': 'Etkinlik & Organizasyon',
+          'type': 'checklist',
+          'title': 'VIP konukların isimliklerinin kulise bırakılması',
+          'subtitle': 'Öncelikli',
+          'statusColor': '0xFFFF9800', // Turuncu
+          'isDone': 0,
+        });
+
+        await db.insert('committee_items', {
+          'committee': 'Etkinlik & Organizasyon',
+          'type': 'checklist',
+          'title': 'Sahne yaka mikrofonlarının pillerinin yenilenmesi',
+          'subtitle': 'Acil',
+          'statusColor': '0xFFF44336', // Kırmızı
+          'isDone': 0,
+        });
+
+        await db.insert('committee_items', {
+          'committee': 'Etkinlik & Organizasyon',
+          'type': 'checklist',
+          'title': 'Kayıt masası için yedek yaka kartı iplerinin getirilmesi',
+          'subtitle': 'Normal',
+          'statusColor': '0xFF4CAF50', // Yeşil
+          'isDone': 0,
+        });
+
         await db.insert('committee_items', {
           'committee': 'Etkinlik & Organizasyon',
           'type': 'summit_capacity',
-          'title': 'Tech Echo Zirve Katılımı',
-          'subtitle': '380/500',
+          'title': 'Tech Echo',
+          'subtitle': '120/200',
+          'statusColor': '0xFFFF9800',
+          'isDone': 0,
+        });
+
+        await db.insert('committee_items', {
+          'committee': 'Etkinlik & Organizasyon',
+          'type': 'summit_capacity',
+          'title': 'VIP Networking',
+          'subtitle': '34/50',
           'statusColor': '0xFFFF9800',
           'isDone': 0,
         });
