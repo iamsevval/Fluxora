@@ -19,8 +19,8 @@ class DbHelper {
   }
 
   initDb() async {
-    // Sürüm yükseltmesi ve dinamik zirve silme özellikleri için topluluk_v12.db kullanıyoruz
-    String path = join(await getDatabasesPath(), 'topluluk_v12.db');
+    // Şifre güncellemeleri için topluluk_v14.db kullanıyoruz
+    String path = join(await getDatabasesPath(), 'topluluk_v14.db');
     return await openDatabase(
       path, 
       version: 7, 
@@ -154,49 +154,49 @@ class DbHelper {
         await db.insert('users', {
           'fullName': 'tasarim uyesi',
           'username': 'tasarim_uyesi1',
-          'password': '123',
+          'password': '1tasarim123',
           'primaryCommittee': 'Dijital Medya & Tasarım',
           'isNewUser': 0,
         });
         await db.insert('users', {
           'fullName': 'tasarim uyesi2',
           'username': 'tasarim_uyesi2',
-          'password': '123',
+          'password': '2tasarim123',
           'primaryCommittee': 'Dijital Medya & Tasarım',
           'isNewUser': 0,
         });
         await db.insert('users', {
           'fullName': 'medium uyesi',
           'username': 'medium_uyesi1',
-          'password': '123',
+          'password': '1medium123',
           'primaryCommittee': 'Medium & YouTube',
           'isNewUser': 0,
         });
         await db.insert('users', {
           'fullName': 'medium uyesi2',
           'username': 'medium_uyesi2',
-          'password': '123',
+          'password': '2medium123',
           'primaryCommittee': 'Medium & YouTube',
           'isNewUser': 0,
         });
         await db.insert('users', {
           'fullName': 'sponsorluk uyesi',
           'username': 'sponsorluk_uyesi',
-          'password': '123',
+          'password': '1sponsorluk123',
           'primaryCommittee': 'Sponsorluk & İş Geliştirme',
           'isNewUser': 0,
         });
         await db.insert('users', {
           'fullName': 'elci yardimcisi',
           'username': 'elci_yardimcisi',
-          'password': '123',
+          'password': '123456',
           'primaryCommittee': 'Kampüs Elçisi',
           'isNewUser': 0,
         });
         await db.insert('users', {
           'fullName': 'etkinlik uyesi',
           'username': 'etkinlik_uyesi',
-          'password': '123',
+          'password': '1etkinlik123',
           'primaryCommittee': 'Etkinlik & Organizasyon',
           'isNewUser': 0,
         });

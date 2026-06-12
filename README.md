@@ -108,8 +108,10 @@ Uygulamanın veri dolu ve çalışır vaziyette test edilebilmesi için veritaba
 | Rol | Kullanıcı Adı | Şifre | Erişim Yetkisi |
 | :--- | :--- | :--- | :--- |
 | **Kampüs Elçisi (Lider)** | `elci` | `elci12345` | Global Liderlik Portalı, Duyuru Yayını, Tüm Görevler |
-| **Etkinlik Üyesi** | `etkinlik` | `etkinlik123` | Etkinlik & Organizasyon Komitesi Özel Sayfası |
-| **Sponsorluk Üyesi** | `sponsorluk` | `sponsorluk123` | Sponsorluk & İş Geliştirme Komitesi Özel Sayfası |
+| **Dijital Medya & Tasarım** | `tasarim_uyesi1` | `1tasarim123` | Tasarım Araçları ve Reels Taslakları Paneli |
+| **Medium & YouTube** | `medium_uyesi1` | `1medium123` | Yayıncılık ve Canlı Yayın Soruları Havuzu |
+| **Sponsorluk & İş Geliştirme** | `sponsorluk_uyesi` | `1sponsorluk123` | Sponsorluk Paket Hesaplayıcısı ve Marka Görüşmeleri |
+| **Etkinlik & Organizasyon** | `etkinlik_uyesi` | `1etkinlik123` | Zirve Görev Matrisi ve Organizasyon Yönetimi |
 
 ---
 
