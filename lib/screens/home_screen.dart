@@ -82,19 +82,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool get _isLeadDashboard => (widget.user.primaryCommittee == 'Kampüs Elçisi' || widget.user.primaryCommittee == 'Kampüs Elçisi Yardımcısı') && (widget.committeeName == 'Kampüs Elçisi' || widget.committeeName == 'Kampüs Elçisi Yardımcısı');
 
-  // --- DUYURU VE ELÇİ VERİLERİ ---
+  // DUYURU VE ELÇİ VERİLERİ
   List<Announcement> _announcements = []; 
   List<Event> _allEvents = []; 
   String _selectedLeadCommitteeFilter = 'Tüm Komiteler'; 
   
-  // --- KOMİTE ÖZEL ARAÇ VERİLERİ (SQLite) ---
+  // KOMİTE ÖZEL ARAÇ VERİLERİ (SQLite)
   List<CommitteeItem> _committeeBrands = [];
   List<CommitteeItem> _committeeContents = [];
   List<CommitteeItem> _committeeYoutube = [];
   List<CommitteeItem> _committeeChecklist = [];
   List<CommitteeItem> _committeeCapacities = [];
 
-  // --- İLERİ SEVİYE YARATICI ARAÇ VERİLERİ (SQLite) ---
+  //  ARAÇ VERİLERİ (SQLite)
   List<SponsorshipPackage> _packages = [];
   List<ReelsDraft> _drafts = [];
   List<StreamQuestion> _streamQuestions = [];
@@ -4003,7 +4003,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 35),
           
-          // ---------------- TEMA VE AYARLAR KARTI (SQLITE DESTEKLİ) ----------------
+          // TEMA VE AYARLAR KARTI 
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -4023,7 +4023,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Divider(),
                 
-                // YOL GÖSTERİCİ KILAVUZ BUTONU (PERSISTENT REHBER)
+                // YOL GÖSTERİCİ KILAVUZ BUTONU 
                 ListTile(
                   leading: Icon(Icons.help_center_outlined, color: widget.committeeColor),
                   title: Text('Yol Gösterici Kılavuz', style: TextStyle(fontWeight: FontWeight.bold, color: textColor, fontSize: 15)),
