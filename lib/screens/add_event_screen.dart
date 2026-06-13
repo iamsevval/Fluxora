@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Tarih formatlamak için
+import 'package:intl/intl.dart'; 
 import '../database/db_helper.dart';
 import '../models/event_model.dart';
-import '../models/user_model.dart'; // Kullanıcı modeli eklendi
+import '../models/user_model.dart'; 
 
 class AddEventScreen extends StatefulWidget {
   final String selectedCommittee; // Anasayfadan gelen seçili komite
@@ -22,8 +22,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   
-  List<User> _users = []; // Tüm üyelerin listesi
-  String? _selectedUser; // Seçilen üye
+  List<User> _users = []; 
+  String? _selectedUser; 
 
   final DbHelper _dbHelper = DbHelper();
   final List<String> _committees = [
@@ -123,12 +123,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
       return;
     }
 
-    // Tarih ve saati birleştirip şık bir metne çeviriyoruz (Örn: 15 Mayıs 2026, 20:00)
+    // Tarih ve saati birleştirip metne çeviriyoruz 
     final formattedDate = DateFormat('dd MMMM yyyy', 'tr_TR').format(_selectedDate!);
     final formattedTime = _selectedTime!.format(context);
     final finalDateTimeString = '$formattedDate, $formattedTime';
 
-    // Çakışma / Mükerrer Kontrolü (Aynı komitede aynı isim ve aynı saatte etkinlik olmasın)
+    // Çakışma Kontrolü (Aynı komitede aynı isim ve aynı saatte etkinlik olmasın)
     final existing = await _dbHelper.getEventsByCommittee(_currentCommittee!);
     final isDuplicate = existing.any((e) => e.title.toLowerCase() == title.toLowerCase() && e.date == finalDateTimeString);
     if (isDuplicate) {
@@ -262,7 +262,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               decoration: const InputDecoration(
                 labelText: 'Açıklama', 
                 prefixIcon: Padding(
-                  padding: EdgeInsets.only(bottom: 60.0), // multiline olunca ikon ortalanmasın diye
+                  padding: EdgeInsets.only(bottom: 60.0), 
                   child: Icon(Icons.description, color: Color(0xFF3949AB)),
                 ),
               ),

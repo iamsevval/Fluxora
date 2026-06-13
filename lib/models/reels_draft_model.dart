@@ -1,7 +1,7 @@
 class ReelsDraft {
   int? id;
   String concept;
-  int duration; // saniye
+  int duration; 
   int isTrendingMusic; // 0: False, 1: True
   String hookStrength; // 'Düşük', 'Orta', 'Yüksek'
   int calculatedViralScore; // 0 - 100

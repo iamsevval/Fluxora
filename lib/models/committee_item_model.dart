@@ -4,7 +4,7 @@ class CommitteeItem {
   String type; // 'brand', 'content', 'link', 'checklist'
   String title;
   String subtitle;
-  String statusColor; // hexadecimal color string, örn: "0xFF4CAF50"
+  String statusColor; 
   int isDone; // 0: False, 1: True
 
   CommitteeItem({

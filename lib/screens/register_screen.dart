@@ -52,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       User newUser = User(
         fullName: _fullNameController.text.trim(),
         username: username,
-        password: _passwordController.text, // Gerçek uygulamada şifrelenmeli
+        password: _passwordController.text, 
         primaryCommittee: _selectedCommittee,
         isNewUser: 1, // Onboarding rehberini görsün
       );
@@ -63,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Kayıt başarılı! Lütfen giriş yapın.')),
           );
-          Navigator.pop(context); // Giriş ekranına dön
+          Navigator.pop(context); 
         }
       } catch (e) {
         if (mounted) {
@@ -125,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // --- BİRİNCİL KOMİTE SEÇİCİ ---
+                // BİRİNCİL KOMİTE SEÇİCİ
                 DropdownButtonFormField<String>(
                   value: _selectedCommittee,
                   decoration: const InputDecoration(

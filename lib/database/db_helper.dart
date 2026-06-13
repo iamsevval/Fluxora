@@ -7,7 +7,7 @@ import '../models/sponsorship_package_model.dart';
 import '../models/reels_draft_model.dart';
 import '../models/stream_question_model.dart';
 import '../models/event_duty_model.dart';
-import '../models/announcement_model.dart'; // Yeni duyuru modeli eklendi
+import '../models/announcement_model.dart'; 
 
 class DbHelper {
   static Database? _db;
@@ -19,13 +19,12 @@ class DbHelper {
   }
 
   initDb() async {
-    // Şifre güncellemeleri için topluluk_v14.db kullanıyoruz
     String path = join(await getDatabasesPath(), 'topluluk_v14.db');
     return await openDatabase(
       path, 
       version: 7, 
       onCreate: (db, version) async {
-        // 1. Etkinlikler Tablosu (assignedTo eklendi)
+        // Etkinlikler Tablosu 
         await db.execute('''
           CREATE TABLE events(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +38,7 @@ class DbHelper {
           )
         ''');
 
-        // 2. Kullanıcılar Tablosu (Genişletilmiş)
+        // Kullanıcılar Tablosu (Genişletilmiş)
         await db.execute('''
           CREATE TABLE users(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,7 +50,7 @@ class DbHelper {
           )
         ''');
 
-        // 3. Komite Özel Araçlar Tablosu 
+        // Komite Özel Araçlar Tablosu 
         await db.execute('''
           CREATE TABLE committee_items(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,7 +63,7 @@ class DbHelper {
           )
         ''');
 
-        // 4. Yeni İleri Seviye Sponsorluk Paket Tablosu
+        // Sponsorluk Paket Tablosu
         await db.execute('''
           CREATE TABLE sponsorship_packages(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,7 +76,7 @@ class DbHelper {
           )
         ''');
 
-        // 5. Yeni İleri Seviye Reels Taslak Tablosu
+        // Reels Taslak Tablosu
         await db.execute('''
           CREATE TABLE reels_drafts(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,7 +89,7 @@ class DbHelper {
           )
         ''');
 
-        // 6. Yeni İleri Seviye Soru Havuzu Tablosu
+        // Soru Havuzu Tablosu
         await db.execute('''
           CREATE TABLE stream_questions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,7 +101,7 @@ class DbHelper {
           )
         ''');
 
-        // 7. Yeni İleri Seviye Zirve Görev Dağılım Tablosu
+        // Zirve Görev Dağılım Tablosu
         await db.execute('''
           CREATE TABLE event_duties(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -113,7 +112,7 @@ class DbHelper {
           )
         ''');
 
-        // 8. Uygulama Tema Ayarlar Tablosu
+        // Uygulama Tema Ayarlar Tablosu
         await db.execute('''
           CREATE TABLE app_settings(
             id INTEGER PRIMARY KEY,
@@ -122,7 +121,7 @@ class DbHelper {
           )
         ''');
 
-        // 9. Yeni Elçi Duyuruları Tablosu
+        // Elçi Duyuruları Tablosu
         await db.execute('''
           CREATE TABLE announcements(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -134,7 +133,7 @@ class DbHelper {
           )
         ''');
 
-        // --- SEED VERİLERİ (İLK AÇILIŞ ÖRNEKLERİ) ---
+        // --- SEED VERİLERİ ---
         // Uygulama Ayarları İlkleme
         await db.insert('app_settings', {
           'id': 1,
@@ -376,7 +375,7 @@ class DbHelper {
           'type': 'checklist',
           'title': 'Yaka Kartları Basımı',
           'subtitle': 'Acil',
-          'statusColor': '0xFF4CAF50', // Yeşil
+          'statusColor': '0xFF4CAF50', 
           'isDone': 1,
         });
 
@@ -385,7 +384,7 @@ class DbHelper {
           'type': 'checklist',
           'title': 'VIP konukların isimliklerinin kulise bırakılması',
           'subtitle': 'Öncelikli',
-          'statusColor': '0xFFFF9800', // Turuncu
+          'statusColor': '0xFFFF9800', 
           'isDone': 0,
         });
 
@@ -394,7 +393,7 @@ class DbHelper {
           'type': 'checklist',
           'title': 'Sahne yaka mikrofonlarının pillerinin yenilenmesi',
           'subtitle': 'Acil',
-          'statusColor': '0xFFF44336', // Kırmızı
+          'statusColor': '0xFFF44336', 
           'isDone': 0,
         });
 
@@ -403,7 +402,7 @@ class DbHelper {
           'type': 'checklist',
           'title': 'Kayıt masası için yedek yaka kartı iplerinin getirilmesi',
           'subtitle': 'Normal',
-          'statusColor': '0xFF4CAF50', // Yeşil
+          'statusColor': '0xFF4CAF50', 
           'isDone': 0,
         });
 
@@ -425,7 +424,7 @@ class DbHelper {
           'isDone': 0,
         });
 
-        // 1. Sponsorluk Paket Seeding
+        // Sponsorluk Paket Seeding
         await db.insert('sponsorship_packages', {
           'packageName': 'Teknoloji Sponsorluğu',
           'budgetLimit': 25000.0,
@@ -435,7 +434,7 @@ class DbHelper {
           'totalPrice': 37000.0
         });
 
-        // 2. Reels Taslak Seeding
+        // Reels Taslak Seeding
         await db.insert('reels_drafts', {
           'concept': 'Bir Yazılımcının 1 Günü',
           'duration': 14,
@@ -445,7 +444,7 @@ class DbHelper {
           'recommendations': 'Mükemmel planlama! Süre 15 saniyenin altında ve trend müzik seçilmiş.'
         });
 
-        // 3. Canlı Yayın Soru Seeding
+        // Canlı Yayın Soru Seeding
         await db.insert('stream_questions', {
           'guestName': 'Konuk: Ahmet Yılmaz',
           'questioner': 'Berke Ş.',
@@ -454,7 +453,7 @@ class DbHelper {
           'priority': 'Yüksek'
         });
 
-        // 4. Görev Matrisi Seeding
+        // Görev Matrisi Seeding
         await db.insert('event_duties', {
           'staffName': 'Şevval Arslan',
           'dutyZone': 'Karşılama',
@@ -576,7 +575,7 @@ class DbHelper {
     );
   }
 
-  // --- KOMİTE ÖZEL ARAÇ İŞLEMLERİ (Eski Tablo) ---
+  // --- KOMİTE ÖZEL ARAÇ İŞLEMLERİ  ---
 
   Future<int> insertCommitteeItem(CommitteeItem item) async {
     var dbClient = await db;
@@ -612,7 +611,7 @@ class DbHelper {
     );
   }
 
-  // --- 1. SPONSORLUK PAKET CRUD İŞLEMLERİ ---
+  // --- SPONSORLUK PAKET CRUD İŞLEMLERİ ---
 
   Future<int> insertSponsorshipPackage(SponsorshipPackage package) async {
     var dbClient = await db;
@@ -644,7 +643,7 @@ class DbHelper {
     );
   }
 
-  // --- 2. REELS DRAFT CRUD İŞLEMLERİ ---
+  // --- REELS DRAFT CRUD İŞLEMLERİ ---
 
   Future<int> insertReelsDraft(ReelsDraft draft) async {
     var dbClient = await db;
@@ -676,7 +675,7 @@ class DbHelper {
     );
   }
 
-  // --- 3. STREAM QUESTION CRUD İŞLEMLERİ ---
+  // --- STREAM QUESTION CRUD İŞLEMLERİ ---
 
   Future<int> insertStreamQuestion(StreamQuestion question) async {
     var dbClient = await db;
@@ -708,7 +707,7 @@ class DbHelper {
     );
   }
 
-  // --- 4. EVENT DUTY CRUD İŞLEMLERİ ---
+  // --- EVENT DUTY CRUD İŞLEMLERİ ---
 
   Future<int> insertEventDuty(EventDuty duty) async {
     var dbClient = await db;
@@ -740,7 +739,7 @@ class DbHelper {
     );
   }
 
-  // --- 5. TEMA VE AYARLAR İŞLEMLERİ ---
+  // --- TEMA VE AYARLAR İŞLEMLERİ ---
 
   Future<Map<String, dynamic>?> getAppSettings() async {
     var dbClient = await db;
@@ -761,7 +760,7 @@ class DbHelper {
     );
   }
 
-  // --- 6. DUYURU VE ORTAK ELÇİ İŞLEMLERİ ---
+  // --- DUYURU VE ORTAK ELÇİ İŞLEMLERİ ---
 
   Future<int> insertAnnouncement(Announcement announcement) async {
     var dbClient = await db;

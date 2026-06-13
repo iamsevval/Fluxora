@@ -4,7 +4,7 @@ class User {
   String username;
   String password;
   String? primaryCommittee;
-  int isNewUser; // 1: Yeni kayıt (onboarding gösterilmeli), 0: Eski kayıt
+  int isNewUser; // 1: Yeni kayıt (onboarding), 0: Eski kayıt
 
   User({
     this.id,

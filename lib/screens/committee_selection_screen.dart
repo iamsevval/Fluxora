@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
-import 'home_screen.dart'; // Dashboard ekranı olacak
+import 'home_screen.dart'; 
 
 class CommitteeSelectionScreen extends StatelessWidget {
   final User user;
@@ -11,28 +11,28 @@ class CommitteeSelectionScreen extends StatelessWidget {
     {
       'title': 'Sponsorluk & İş Geliştirme',
       'icon': Icons.handshake,
-      'color': Color(0xFF4CAF50), // Yeşil
+      'color': Color(0xFF4CAF50),
       'description': 'Marka iş birlikleri, sponsorluk ve takım ruhu.',
       'detail': 'Sosyal medya üzerinden, markalar ve işletmelerle iş birlikleri kurarak topluluğumuza prestij ve değer katmak.\nEtkinlikleri daha eğlenceli ve akılda kalıcı hale getirmek için özel ödüller ve sponsorluk fırsatları yaratmak.'
     },
     {
       'title': 'Dijital Medya & Tasarım',
       'icon': Icons.design_services,
-      'color': Color(0xFFE91E63), // Pembe
+      'color': Color(0xFFE91E63), 
       'description': 'Sosyal medya yönetimi ve görsel içerik üretimi.',
       'detail': 'Sosyal medya hesaplarını yaratıcı, dinamik içeriklerle yönetmek.\nGüncel akımları takip ederek eğlenceli reels videoları çekmek, Post ve story tasarımları yapmak.'
     },
     {
       'title': 'Medium & YouTube',
       'icon': Icons.video_camera_front,
-      'color': Color(0xFFF44336), // Kırmızı
+      'color': Color(0xFFF44336), 
       'description': 'Blog yazıları ve YouTube canlı yayın organizasyonları.',
       'detail': 'Topluluğumuzun Medium hesabı için özgün ve bilgilendirici blog yazıları kaleme almak.\nYouTube üzerinden gerçekleştireceğimiz canlı yayınların organizasyonunu yürütmek ve moderatörlük yapmak.'
     },
     {
       'title': 'Etkinlik & Organizasyon',
       'icon': Icons.event_available,
-      'color': Color(0xFFFF9800), // Turuncu
+      'color': Color(0xFFFF9800), 
       'description': 'Fiziksel/Online etkinlikler ve yaratıcı atölyeler.',
       'detail': 'Google Meet gibi platformlar üzerinden ilham veren online etkinlikler düzenlemek.\nYaklaşan zirvelerde aktif rol almak, teknik geziler ve yarışmalar organize etmek.'
     },
@@ -44,7 +44,7 @@ class CommitteeSelectionScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Komiteleri İncele', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
-        automaticallyImplyLeading: true, // Geri tuşunu göster
+        automaticallyImplyLeading: true, 
       ),
       body: Column(
         children: [

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Tarih formatlama eklendi
+import 'package:intl/intl.dart'; 
 import '../database/db_helper.dart';
 import '../models/event_model.dart';
 import '../models/user_model.dart';
@@ -9,11 +9,11 @@ import '../models/sponsorship_package_model.dart';
 import '../models/reels_draft_model.dart';
 import '../models/stream_question_model.dart';
 import '../models/event_duty_model.dart';
-import '../models/announcement_model.dart'; // Duyuru modeli eklendi
+import '../models/announcement_model.dart'; 
 import 'add_event_screen.dart';
 import 'edit_event_screen.dart';
 import 'login_screen.dart';
-import 'committee_selection_screen.dart'; // Komitelere göz atmak için eklendi
+import 'committee_selection_screen.dart'; 
 
 // --- CUSTOM PAINTER PROGRESS RING ---
 class ProgressRingPainter extends CustomPainter {
@@ -28,14 +28,12 @@ class ProgressRingPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
     
-    // Background Ring - Ekstra kompakt halka için kalınlık ve konum ayarlandı
     final bgPaint = Paint()
       ..color = color.withOpacity(isDark ? 0.08 : 0.12)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 5;
     canvas.drawCircle(center, radius - 3, bgPaint);
 
-    // Progress Arc - Ekstra kompakt halka için kalınlık ve konum ayarlandı
     final progressPaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
@@ -45,8 +43,8 @@ class ProgressRingPainter extends CustomPainter {
     final rect = Rect.fromCircle(center: center, radius: radius - 3);
     canvas.drawArc(
       rect,
-      -3.14159265 / 2, // Start at the top
-      2 * 3.14159265 * progress, // Sweep angle
+      -3.14159265 / 2, 
+      2 * 3.14159265 * progress, 
       false,
       progressPaint,
     );
@@ -85,9 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool get _isLeadDashboard => (widget.user.primaryCommittee == 'Kampüs Elçisi' || widget.user.primaryCommittee == 'Kampüs Elçisi Yardımcısı') && (widget.committeeName == 'Kampüs Elçisi' || widget.committeeName == 'Kampüs Elçisi Yardımcısı');
 
   // --- DUYURU VE ELÇİ VERİLERİ ---
-  List<Announcement> _announcements = []; // Komite veya tüm duyurular listesi
-  List<Event> _allEvents = []; // Tüm komitelerin etkinlikleri (Elçi için)
-  String _selectedLeadCommitteeFilter = 'Tüm Komiteler'; // Elçi filtreleme seçeneği
+  List<Announcement> _announcements = []; 
+  List<Event> _allEvents = []; 
+  String _selectedLeadCommitteeFilter = 'Tüm Komiteler'; 
   
   // --- KOMİTE ÖZEL ARAÇ VERİLERİ (SQLite) ---
   List<CommitteeItem> _committeeBrands = [];
@@ -106,7 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer? _countdownTimer;
   Duration _remainingTime = Duration.zero;
 
-  // --- SİSTEM AYARLARI ---
   bool _isDarkMode = false;
   final TextEditingController _searchController = TextEditingController();
 
@@ -588,7 +585,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
 
-          // Vizyon Kartı (Hero Animasyonu ile)
+          // Vizyon Kartı 
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
@@ -628,7 +625,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 25),
           
-          // İstatistikler (Dinamik CustomPainter Grafik Dahil)
+          // İstatistikler 
           Text(
             'İstatistikler',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
@@ -647,7 +644,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(width: 25),
-              // CustomPainter Çizimi ile Animasyonlu Ring (Ekstra kompakt saran boyut)
               SizedBox(
                 width: 65,
                 height: 65,
@@ -661,7 +657,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           '${(value * 100).toInt()}%',
                           style: TextStyle(
-                            fontSize: 12, // Ekstra küçük halkaya tam oturup bitişik durması için 12 olarak ayarlandı
+                            fontSize: 12, 
                             fontWeight: FontWeight.bold,
                             color: widget.committeeColor,
                           ),
@@ -869,7 +865,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 15),
         
-        // ---------------- YARATICI ÖZELLİK: SPONSORLUK BÜTÇE/PAKET HESAPLAYICI ----------------
+        // YARATICI ÖZELLİK: SPONSORLUK BÜTÇE/PAKET HESAPLAYICI 
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
@@ -1311,7 +1307,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 2. GELİŞMİŞ DİJİTAL MEDYA BÖLÜMÜ
+  // 2. DİJİTAL MEDYA BÖLÜMÜ
   Widget _buildMediaWidgets(Color cardColor) {
     final textColor = _isDarkMode ? Colors.white : Colors.black87;
 
@@ -1404,7 +1400,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 15),
         
-        // ---------------- YARATICI ÖZELLİK: REELS VİRAL SKOR TAHMİNCİSİ ----------------
+        //  REELS VİRAL SKOR TAHMİNCİSİ 
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
@@ -1954,7 +1950,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 15),
         
-        // ---------------- YARATICI ÖZELLİK: CANLI YAYIN SORU HAVUZU VE MODERATÖRÜ ----------------
+        // CANLI YAYIN SORU HAVUZU VE MODERATÖRÜ 
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
@@ -2198,8 +2194,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         await _dbHelper.deleteCommitteeItem(item.id!);
                         _refreshCommitteeItems();
                         if (mounted) {
-                          Navigator.pop(context); // Close confirm
-                          Navigator.pop(context); // Close edit dialog
+                          Navigator.pop(context); 
+                          Navigator.pop(context); 
                         }
                       },
                       child: const Text('Sil / Bitir'),
@@ -2411,7 +2407,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 4. GELİŞMİŞ ETKİNLİK BÖLÜMÜ
+  // 4.ETKİNLİK BÖLÜMÜ
   Widget _buildEventWidgets(Color cardColor) {
     final textColor = _isDarkMode ? Colors.white : Colors.black87;
 
@@ -2631,7 +2627,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 15),
 
-        // ---------------- YARATICI ÖZELLİK: İNTERAKTİF EKİP GÖREV MATRİSİ ----------------
+        // İNTERAKTİF EKİP GÖREV MATRİSİ 
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
@@ -2988,7 +2984,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // --- 2. GÖREVLER (TASKS) SEKMESİ ---
+  // GÖREVLER (TASKS) SEKMESİ 
   Widget _buildTasksTab(Color cardColor) {
     final textColor = _isDarkMode ? Colors.white : Colors.black87;
     
@@ -3214,7 +3210,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // --- KAMPÜS ELÇİSİ LİDERLİK TAB METOTLARI ---
+  // KAMPÜS ELÇİSİ LİDERLİK TAB METOTLARI 
 
   Widget _buildLeadOverviewTab(Color cardColor) {
     final textColor = _isDarkMode ? Colors.white : Colors.black87;
@@ -4027,7 +4023,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Divider(),
                 
-                // ---------------- YOL GÖSTERİCİ KILAVUZ BUTONU (PERSISTENT REHBER) ----------------
+                // YOL GÖSTERİCİ KILAVUZ BUTONU (PERSISTENT REHBER)
                 ListTile(
                   leading: Icon(Icons.help_center_outlined, color: widget.committeeColor),
                   title: Text('Yol Gösterici Kılavuz', style: TextStyle(fontWeight: FontWeight.bold, color: textColor, fontSize: 15)),
@@ -4036,7 +4032,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Divider(),
 
-                // ---------------- KOMİTELERE GÖZ AT VE GÖREV ATA BUTONU ----------------
+                // KOMİTELERE GÖZ AT VE GÖREV ATA BUTONU 
                 ListTile(
                   leading: const Icon(Icons.explore_outlined, color: Colors.blueAccent),
                   title: Text('Komitelere Göz At / Görev Ata', style: TextStyle(fontWeight: FontWeight.bold, color: textColor, fontSize: 15)),

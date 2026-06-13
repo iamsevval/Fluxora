@@ -23,9 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Color _getColorForCommittee(String? committee) {
     switch (committee) {
       case 'Kampüs Elçisi':
-        return const Color(0xFF3949AB); // Lider İndigo Mavi
+        return const Color(0xFF3949AB); 
       case 'Kampüs Elçisi Yardımcısı':
-        return const Color(0xFF5C6BC0); // Yardımcı Lider Açık İndigo
+        return const Color(0xFF5C6BC0); 
       case 'Sponsorluk & İş Geliştirme':
         return const Color(0xFF4CAF50);
       case 'Dijital Medya & Tasarım':

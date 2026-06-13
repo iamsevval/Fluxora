@@ -3,8 +3,8 @@ class SponsorshipPackage {
   String packageName;
   double budgetLimit;
   int socialMediaPosts; 
-  int logoBanner;       // 0: False, 1: True
-  int standArea;        // 0: False, 1: True
+  int logoBanner;    
+  int standArea;        
   double totalPrice;
 
   SponsorshipPackage({

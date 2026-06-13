@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../database/db_helper.dart';
 import '../models/event_model.dart';
-import '../models/user_model.dart'; // Kullanıcı modeli eklendi
+import '../models/user_model.dart'; 
 
 class EditEventScreen extends StatefulWidget {
   final Event event;
@@ -21,10 +21,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
   
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-  late String _currentDateString; // Ekrandaki gösterim için
+  late String _currentDateString; 
   
-  List<User> _users = []; // Tüm üyelerin listesi
-  String? _selectedUser; // Seçilen üye
+  List<User> _users = []; 
+  String? _selectedUser;
   
   final DbHelper _dbHelper = DbHelper();
   final List<String> _committees = [
@@ -41,7 +41,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     _locationController = TextEditingController(text: widget.event.location);
     _descriptionController = TextEditingController(text: widget.event.description);
     _currentCommittee = widget.event.committee;
-    _currentDateString = widget.event.date; // Veritabanındaki eski tarih metni
+    _currentDateString = widget.event.date; 
     _selectedUser = widget.event.assignedTo;
     _loadUsers();
   }
@@ -135,7 +135,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     Event updatedEvent = Event(
       id: widget.event.id, 
       title: title,
-      date: _currentDateString, // Yeni veya eski tarih metni
+      date: _currentDateString, 
       location: _locationController.text.trim(),
       description: _descriptionController.text.trim(),
       committee: _currentCommittee,

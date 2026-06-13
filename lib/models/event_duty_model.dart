@@ -2,7 +2,7 @@ class EventDuty {
   int? id;
   String staffName;
   String dutyZone; // 'Karşılama', 'Ses Kontrol', 'Sahne Arkası', 'İkram'
-  String timeSlot; // Örn: '09:00 - 12:00'
+  String timeSlot; 
   String status;   // 'Görevde', 'Molada'
 
   EventDuty({
