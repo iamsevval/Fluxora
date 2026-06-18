@@ -73,6 +73,7 @@ lib/
     ├── login_screen.dart          # Kullanıcı giriş ekranı (SQLite doğrulamalı)
     ├── register_screen.dart       # Yeni üye kayıt ekranı (SQLite entegrasyonlu)
     ├── home_screen.dart           # Ana ekran (Lider paneli, komite sekmeleri ve özel araçlar)
+    ├── committee_selection_screen.dart # İlk giriş sonrası komite seçimi ve yönlendirme ekranı
     ├── add_event_screen.dart      # SQLite dinamik üye seçimli yeni görev ekleme ekranı
     └── edit_event_screen.dart     # SQLite dinamik üye seçimli görev düzenleme ve silme ekranı
 ```
@@ -95,7 +96,7 @@ Uygulamanın kalbini SQLite tabanlı `DbHelper` sınıfı oluşturur. Bu sınıf
 | **`app_settings`** | `id` (PRIMARY KEY 1), `isDarkMode` (0 veya 1), `themeColor` | SQLite destekli kalıcı tema ayarları. |
 
 #### Veritabanı Yaşam Döngüsü (Lifecycle) Metotları
-- **`initDb()`:** Veritabanı dosyasını (`topluluk_v9.db`) cihaz hafızasında oluşturur veya var olan dosyaya bağlanır.
+- **`initDb()`:** Veritabanı dosyasını (`topluluk_v14.db`) cihaz hafızasında oluşturur veya var olan dosyaya bağlanır.
 - **`onCreate()`:** Veritabanı ilk kez oluşturulurken yukarıdaki 9 tabloyu SQL sorgularıyla kurar ve Seed Verileri (varsayılan kullanıcı `elci`, örnek duyurular, görev matrisi, taslak reels vb.) ekler. Hoca uygulamayı ilk açtığında boş ekran görmez, dolu ve çalışan bir sistemle karşılaşır.
 - **`onUpgrade()`:** İleride veritabanı şemasında güncelleme veya kolon ekleme gerektiğinde verileri kaybetmeden şemayı günceller.
 
