@@ -1,151 +1,147 @@
-# 📱 Üniversite Topluluk Ajandası Mobil Uygulaması
+# 📱 University Community Agenda Mobile App
 
-Bu proje, üniversite öğrenci topluluklarının iç koordinasyonunu, komite yönetimini, görev dağılımlarını ve zirve organizasyonlarını tek bir merkezden sürdürülebilir kılmak amacıyla geliştirilmiş, **tamamen yerel (native) ve veri kalıcılığına sahip bir mobil ajanda uygulamasıdır.** 
+This project is a **fully native, fully local mobile agenda application with data persistence**, developed to sustainably centralize the internal coordination, committee management, task distribution, and summit organization of university student communities.
 
-Akademik proje kriterlerine tam uyum sağlamak üzere, harici hiçbir bulut servisi veya karmaşık state management kütüphanesi kullanılmamış; tüm veri yönetimi ve iş mantığı **Flutter & SQLite (`sqflite`)** mimarisi üzerine inşa edilmiştir.
-
----
-
-## 🚀 Öne Çıkan Gelişmiş Özellikler
-
-### 1. Kampüs Elçisi (Liderlik) Portalı
-* **Global Genel Bakış (Overview):** Giriş yapan kullanıcının rolü "Kampüs Elçisi" veya "Kampüs Elçisi Yardımcısı" ise, tüm komitelerin genel durumunu gösteren grafiksel liderlik paneli açılır.
-* **Grafiksel Takip:** Her komitenin toplam görev sayısı, tamamlanan görev sayısı ve yüzde bazlı başarı oranları `LinearProgressIndicator` ve özel görsel tasarımlarla canlı olarak izlenir.
-* **Etkileşimli Filtreleme:** Lider panosundaki komite özet kartlarına dokunulduğunda, sistem otomatik olarak Görevler sekmesine geçer ve ilgili komiteyi filtreler.
-* **Merkezi Görev Havuzu:** Tüm komitelere ait görevlerin tek ekranda listelendiği, arama motorlu ve komite filtreli gelişmiş görev paneli.
-
-### 2. Kişiye Özel Görev Atama Sistemi
-* **Dinamik Üye Listesi:** Görev ekleme (`AddEventScreen`) ve düzenleme (`EditEventScreen`) ekranlarına SQLite veritabanındaki tüm üyeleri dinamik olarak çeken bir üye dropdown listesi (`DbHelper.getAllUsers()`) entegre edilmiştir.
-* **Görsel Atama Kartları:** Oluşturulan görevlerin kime atandığı (`assignedTo`) görev kartlarının altında profil ikonlu çiplerle şık bir şekilde gösterilir.
-
-### 3. Hedefli Duyuru Dağıtım Sistemi
-* **Duyuru Yönetim Paneli:** Kampüs Elçisi, topluluk geneline ("Tüm Komiteler") veya belirli bir komiteye özel (Örn: "Sponsorluk & İş Geliştirme") zengin içerikli duyurular yayınlayabilir ve bunları silebilir.
-* **Kişiye Özel Duyuru Panosu:** Komite üyeleri kendi panellerine girdiğinde, ana ekranın en üstünde yalnızca kendi komitelerini veya tüm kulübü ilgilendiren güncel duyuruların kaydığı horizontal (yatay) bir elçi duyuruları panosuyla karşılaşırlar.
-
-### 4. Zirve & Etkinlik Katılım Takip Sistemi (Tam CRUD)
-* **Çoklu Takip Kartları:** Zirve ve etkinlikler için dinamik katılım takip kartları oluşturulabilir.
-* **Canlı İlerleme Çubukları:** Kayıtlı katılımcı sayısı ile hedef maksimum kapasite girildiğinde doluluk oranları ve ilerleme barları otomatik hesaplanır.
-* **Katı Doğrulama (Validation):** Kayıtlı katılımcı sayısının negatif olması, maksimum kapasiteden büyük olması veya kapasitenin sıfır/altında girilmesi sistem tarafından engellenir ve kullanıcıya SnackBar uyarısı gösterilir.
-* **Etkinlik Bitti (Silme) Seçeneği:** Başarıyla tamamlanan etkinlikler düzenleme menüsünden kalıcı olarak silinebilir.
-
-### 5. Gelişmiş Komite Özel Araçları
-Uygulama, her komitenin özgün ihtiyaçlarına göre tasarlanmış akıllı araçlar içerir:
-* **Sponsorluk & İş Geliştirme:**
-  * *Sponsorluk Paket Hesaplayıcısı:* Bütçe limitleri, sosyal medya paylaşımları, stant alanları ve logo konumlarına göre dinamik fiyat hesaplayan CRUD destekli paket simülatörü.
-  * *Marka Görüşme Listesi:* Potansiyel sponsor firmaların görüşme durumlarını takip eden veri kartları.
-* **Dijital Medya & Tasarım:**
-  * *Reels Taslak Skorlama Motoru:* Trend müzik kullanımı, video süresi ve kanca (hook) gücüne göre Reels videolarının viral potansiyelini (Viral Score) puanlayan akıllı algoritma.
-  * *Haftalık İçerik Takvimi:* Günlere göre paylaşılacak görsellerin durum kartları.
-* **Medium & YouTube (Yayıncılık):**
-  * *Canlı Yayın Soru Havuzu:* Yayın konuklarına sorulacak soruları öncelik sırasına göre derleyen ve soruldu olarak işaretleyen etkileşimli havuz.
-  * *YouTube Geri Sayım Sayacı:* Planlanan canlı yayın saatine kalan süreyi saniye bazında canlı geri sayan sayaç motoru.
-* **Etkinlik & Organizasyon:**
-  * *Zirve Görev Matrisi:* Etkinlik günü ekibin hangi saat diliminde hangi alanda (Karşılama, Ses, Sahne arkası vb.) görevli olduğunu gösteren görev matrisi.
-  * *Organizasyon İhtiyaçları:* Etkinlik malzemeleri ve kontrol listesi yönetim kartı.
+To fully comply with academic project criteria, no external cloud service or complex state management library has been used; all data management and business logic are built on a **Flutter & SQLite (`sqflite`)** architecture.
 
 ---
 
-## 🛠️ Teknik Altyapı ve Veri Kalıcılığı
+## 🚀 Key Advanced Features
 
-### 📂 1. Proje Mimarisi ve Dosya Yapısı
-Uygulama, Flutter geliştirme standartlarına uygun olarak Clean Architecture (Temiz Mimari) prensipleri doğrultusunda modüler bir yapıya sahiptir. Projede kodların okunabilirliğini ve bakımını kolaylaştırmak için veri modelleri, veritabanı katmanı ve kullanıcı arayüzü (UI) tamamen birbirinden ayrılmıştır.
+### 1. Campus Ambassador (Leadership) Portal
+* **Global Overview:** If the logged-in user's role is "Campus Ambassador" or "Campus Ambassador Assistant," a graphical leadership dashboard opens showing the general status of all committees.
+* **Graphical Tracking:** Each committee's total task count, completed task count, and percentage-based success rates are tracked live with `LinearProgressIndicator` and custom visual designs.
+* **Interactive Filtering:** When a committee summary card on the leadership dashboard is tapped, the system automatically switches to the Tasks tab and filters the relevant committee.
+* **Central Task Pool:** An advanced task panel with search and committee filtering where tasks from all committees are listed on a single screen.
 
-```
-lib/
-│
-├── main.dart                      # Uygulamanın giriş noktası (Giriş kontrolü ve Tema yükleme)
-│
-├── database/
-│   └── db_helper.dart             # SQLite veritabanı bağlantısı, şema kurulumu ve CRUD metotları
-│
-├── models/                        # SQLite tabloları için Dart veri modelleri (Serialization)
-│   ├── announcement_model.dart    # Duyuru veri modeli
-│   ├── committee_item_model.dart  # Genel komite araçları modeli (Marka, Zirve kapasitesi vb.)
-│   ├── event_duty_model.dart      # Görev matrisi (Zaman/Alan dağılımı) modeli
-│   ├── event_model.dart           # Görev/Etkinlik veri modeli
-│   ├── reels_draft_model.dart     # Reels video taslağı ve viral skor modeli
-│   ├── sponsorship_package_model.dart # Sponsorluk paketi veri modeli
-│   ├── stream_question_model.dart # Canlı yayın soru havuzu modeli
-│   └── user_model.dart            # Kullanıcı ve rol modeli
-│
-└── screens/                       # Arayüz (Görsel Tasarım) ekranları
-    ├── splash_screen.dart         # Karşılama ve yönlendirme ekranı
-    ├── login_screen.dart          # Kullanıcı giriş ekranı (SQLite doğrulamalı)
-    ├── register_screen.dart       # Yeni üye kayıt ekranı (SQLite entegrasyonlu)
-    ├── home_screen.dart           # Ana ekran (Lider paneli, komite sekmeleri ve özel araçlar)
-    ├── committee_selection_screen.dart # İlk giriş sonrası komite seçimi ve yönlendirme ekranı
-    ├── add_event_screen.dart      # SQLite dinamik üye seçimli yeni görev ekleme ekranı
-    └── edit_event_screen.dart     # SQLite dinamik üye seçimli görev düzenleme ve silme ekranı
-```
+### 2. Personalized Task Assignment System
+* **Dynamic Member List:** A member dropdown list (`DbHelper.getAllUsers()`) that dynamically pulls all members from the SQLite database is integrated into the task adding (`AddEventScreen`) and editing (`EditEventScreen`) screens.
+* **Visual Assignment Cards:** Who a created task is assigned to (`assignedTo`) is displayed elegantly with profile-icon chips under the task cards.
 
-### 🗄️ 2. SQLite Veritabanı Mimarisi (`db_helper.dart`)
-Uygulamanın kalbini SQLite tabanlı `DbHelper` sınıfı oluşturur. Bu sınıf **Singleton Tasarım Deseni (Singleton Pattern)** kullanılarak yazılmıştır. Bu sayede uygulama genelinde veritabanına tek bir bağlantı kanalı açılır, gereksiz bellek tüketiminin ve veritabanı kilitlenmelerinin önüne geçilir.
+### 3. Targeted Announcement Distribution System
+* **Announcement Management Panel:** The Campus Ambassador can publish and delete rich-content announcements addressed to the entire community ("All Committees") or to a specific committee (e.g., "Sponsorship & Business Development").
+* **Personalized Announcement Board:** When committee members enter their own panels, they encounter a horizontal ambassador announcements board at the top of the main screen, showing only current announcements relevant to their own committee or the whole club.
 
-#### Veritabanı Tablo Şemaları
+### 4. Summit & Event Attendance Tracking System (Full CRUD)
+* **Multiple Tracking Cards:** Dynamic attendance tracking cards can be created for summits and events.
+* **Live Progress Bars:** Occupancy rates and progress bars are automatically calculated when the registered attendee count and target maximum capacity are entered.
+* **Strict Validation:** The system prevents the registered attendee count from being negative, exceeding the maximum capacity, or the capacity being entered as zero/negative, and shows the user a SnackBar warning.
+* **Event Finished (Delete) Option:** Successfully completed events can be permanently deleted from the editing menu.
 
-| Tablo Adı | Görevi / Kolonları | Kritik Detaylar |
+### 5. Advanced Committee-Specific Tools
+The application includes smart tools designed for the unique needs of each committee:
+* **Sponsorship & Business Development:**
+  * *Sponsorship Package Calculator:* A CRUD-supported package simulator that dynamically calculates prices based on budget limits, social media posts, booth areas, and logo placements.
+  * *Brand Negotiation List:* Data cards tracking the negotiation status of potential sponsor companies.
+* **Digital Media & Design:**
+  * *Reels Draft Scoring Engine:* A smart algorithm that scores the viral potential (Viral Score) of Reels videos based on trending music usage, video duration, and hook strength.
+  * *Weekly Content Calendar:* Status cards for visuals to be shared by day.
+* **Medium & YouTube (Publishing):**
+  * *Live Stream Question Pool:* An interactive pool that compiles questions to be asked to stream guests by priority order and marks them as asked.
+  * *YouTube Countdown Timer:* A timer engine that counts down live, second by second, to the planned live stream time.
+* **Event & Organization:**
+  * *Summit Duty Matrix:* A duty matrix showing which time slot and area (Welcoming, Sound, Backstage, etc.) each team member is on duty for on the day of the event.
+  * *Organization Needs:* An event supplies and checklist management card.
+
+---
+
+## 🛠️ Technical Infrastructure and Data Persistence
+
+### 📂 1. Project Architecture and File Structure
+The application has a modular structure in line with Clean Architecture principles, in accordance with Flutter development standards. To make the code more readable and maintainable, data models, the database layer, and the user interface (UI) are completely separated from one another.
+
+    lib/
+    │
+    ├── main.dart                      # Application entry point (Login check and Theme loading)
+    │
+    ├── database/
+    │   └── db_helper.dart             # SQLite database connection, schema setup, and CRUD methods
+    │
+    ├── models/                        # Dart data models for SQLite tables (Serialization)
+    │   ├── announcement_model.dart    # Announcement data model
+    │   ├── committee_item_model.dart  # General committee tools model (Brand, summit capacity, etc.)
+    │   ├── event_duty_model.dart      # Duty matrix (Time/Zone distribution) model
+    │   ├── event_model.dart           # Task/Event data model
+    │   ├── reels_draft_model.dart     # Reels video draft and viral score model
+    │   ├── sponsorship_package_model.dart # Sponsorship package data model
+    │   ├── stream_question_model.dart # Live stream question pool model
+    │   └── user_model.dart            # User and role model
+    │
+    └── screens/                       # Interface (Visual Design) screens
+        ├── splash_screen.dart         # Welcome and routing screen
+        ├── login_screen.dart          # User login screen (SQLite-validated)
+        ├── register_screen.dart       # New member registration screen (SQLite-integrated)
+        ├── home_screen.dart           # Main screen (Leadership dashboard, committee tabs, and dedicated tools)
+        ├── committee_selection_screen.dart # Committee selection and routing screen after first login
+        ├── add_event_screen.dart      # New task adding screen with SQLite dynamic member selection
+        └── edit_event_screen.dart     # Task editing and deletion screen with SQLite dynamic member selection
+
+### 🗄️ 2. SQLite Database Architecture (`db_helper.dart`)
+The heart of the application is formed by the SQLite-based `DbHelper` class. This class is written using the **Singleton Design Pattern**. This ensures that a single connection channel to the database is opened throughout the application, preventing unnecessary memory consumption and database locking issues.
+
+#### Database Table Schemas
+
+| Table Name | Purpose / Columns | Critical Details |
 | :--- | :--- | :--- |
-| **`users`** | `id`, `fullName`, `username` (UNIQUE), `password`, `primaryCommittee`, `isNewUser` | Kullanıcı kimlik doğrulama ve onboarding durumu. |
-| **`events`** | `id`, `title`, `date`, `location`, `description`, `committee`, `isCompleted`, `assignedTo` | Komite içi görevler. `assignedTo` kolonu ile `users` tablosundaki bir üyeye dinamik atama yapılır. |
-| **`announcements`** | `id`, `title`, `content`, `date`, `targetCommittee`, `isCompleted` | Kampüs Elçisinin yayınladığı duyurular. |
-| **`committee_items`** | `id`, `committee`, `type`, `title`, `subtitle`, `statusColor`, `isDone` | Komitelere özel dinamik veri takipleri (Marka görüşmeleri, bütçe takipleri, zirve doluluk durumu). |
-| **`sponsorship_packages`**| `id`, `packageName`, `budgetLimit`, `socialMediaPosts`, `logoBanner`, `standArea`, `totalPrice` | Sponsorluk Paket Hesaplayıcısının CRUD verileri. |
-| **`reels_drafts`** | `id`, `concept`, `duration`, `isTrendingMusic`, `hookStrength`, `calculatedViralScore`, `recommendations` | Reels Taslak Motorunun kaydettiği video verileri ve hesaplanan viral skorları. |
-| **`stream_questions`** | `id`, `guestName`, `questioner`, `questionText`, `isAsked`, `priority` | Canlı yayın soru havuzu verileri. |
-| **`event_duties`** | `id`, `staffName`, `dutyZone`, `timeSlot`, `status` | Zirve görev matrisindeki ekip görevleri. |
-| **`app_settings`** | `id` (PRIMARY KEY 1), `isDarkMode` (0 veya 1), `themeColor` | SQLite destekli kalıcı tema ayarları. |
+| **`users`** | `id`, `fullName`, `username` (UNIQUE), `password`, `primaryCommittee`, `isNewUser` | User authentication and onboarding status. |
+| **`events`** | `id`, `title`, `date`, `location`, `description`, `committee`, `isCompleted`, `assignedTo` | Intra-committee tasks. Dynamically assigned to a member in the `users` table via the `assignedTo` column. |
+| **`announcements`** | `id`, `title`, `content`, `date`, `targetCommittee`, `isCompleted` | Announcements published by the Campus Ambassador. |
+| **`committee_items`** | `id`, `committee`, `type`, `title`, `subtitle`, `statusColor`, `isDone` | Committee-specific dynamic data tracking (Brand negotiations, budget tracking, summit occupancy status). |
+| **`sponsorship_packages`**| `id`, `packageName`, `budgetLimit`, `socialMediaPosts`, `logoBanner`, `standArea`, `totalPrice` | CRUD data for the Sponsorship Package Calculator. |
+| **`reels_drafts`** | `id`, `concept`, `duration`, `isTrendingMusic`, `hookStrength`, `calculatedViralScore`, `recommendations` | Video data saved by the Reels Draft Engine and the calculated viral scores. |
+| **`stream_questions`** | `id`, `guestName`, `questioner`, `questionText`, `isAsked`, `priority` | Live stream question pool data. |
+| **`event_duties`** | `id`, `staffName`, `dutyZone`, `timeSlot`, `status` | Team duties in the summit duty matrix. |
+| **`app_settings`** | `id` (PRIMARY KEY 1), `isDarkMode` (0 or 1), `themeColor` | SQLite-backed persistent theme settings. |
 
-#### Veritabanı Yaşam Döngüsü (Lifecycle) Metotları
-- **`initDb()`:** Veritabanı dosyasını (`topluluk_v14.db`) cihaz hafızasında oluşturur veya var olan dosyaya bağlanır.
-- **`onCreate()`:** Veritabanı ilk kez oluşturulurken yukarıdaki 9 tabloyu SQL sorgularıyla kurar ve Seed Verileri (varsayılan kullanıcı `elci`, örnek duyurular, görev matrisi, taslak reels vb.) ekler. Hoca uygulamayı ilk açtığında boş ekran görmez, dolu ve çalışan bir sistemle karşılaşır.
-- **`onUpgrade()`:** İleride veritabanı şemasında güncelleme veya kolon ekleme gerektiğinde verileri kaybetmeden şemayı günceller.
+#### Database Lifecycle Methods
+- **`initDb()`:** Creates the database file (`topluluk_v14.db`) in device storage or connects to the existing file.
+- **`onCreate()`:** When the database is created for the first time, sets up the 9 tables above with SQL queries and adds Seed Data (default user `elci`, sample announcements, duty matrix, draft reels, etc.). When the instructor opens the app for the first time, they don't see an empty screen but a system that is already populated and working.
+- **`onUpgrade()`:** Updates the schema without losing data in case an update or column addition is needed in the database schema in the future.
 
 ---
 
-## 🔑 Hızlı Başlangıç & Test Hesapları
+## 🔑 Quick Start & Test Accounts
 
-Uygulamanın veri dolu ve çalışır vaziyette test edilebilmesi için veritabanına otomatik olarak tohumlanmış (seeded) varsayılan kullanıcılar ve örnek kayıtlar eklenmiştir:
+Default users and sample records have been automatically seeded into the database so the application can be tested in a fully populated and working state:
 
-| Rol | Kullanıcı Adı | Şifre | Erişim Yetkisi |
+| Role | Username | Password | Access Rights |
 | :--- | :--- | :--- | :--- |
-| **Kampüs Elçisi (Lider)** | `elci` | `elci12345` | Global Liderlik Portalı, Duyuru Yayını, Tüm Görevler |
-| **Dijital Medya & Tasarım** | `tasarim_uyesi1` | `1tasarim123` | Tasarım Araçları ve Reels Taslakları Paneli |
-| **Medium & YouTube** | `medium_uyesi1` | `1medium123` | Yayıncılık ve Canlı Yayın Soruları Havuzu |
-| **Sponsorluk & İş Geliştirme** | `sponsorluk_uyesi` | `1sponsorluk123` | Sponsorluk Paket Hesaplayıcısı ve Marka Görüşmeleri |
-| **Etkinlik & Organizasyon** | `etkinlik_uyesi` | `1etkinlik123` | Zirve Görev Matrisi ve Organizasyon Yönetimi |
+| **Campus Ambassador (Leader)** | `elci` | `elci12345` | Global Leadership Portal, Announcement Publishing, All Tasks |
+| **Digital Media & Design** | `tasarim_uyesi1` | `1tasarim123` | Design Tools and Reels Drafts Panel |
+| **Medium & YouTube** | `medium_uyesi1` | `1medium123` | Publishing and Live Stream Questions Pool |
+| **Sponsorship & Business Development** | `sponsorluk_uyesi` | `1sponsorluk123` | Sponsorship Package Calculator and Brand Negotiations |
+| **Event & Organization** | `etkinlik_uyesi` | `1etkinlik123` | Summit Duty Matrix and Organization Management |
 
 ---
 
-## 💻 Kurulum ve Çalıştırma
+## 💻 Installation and Running
 
-### Gereksinimler
-- Flutter SDK (v3.0.0 veya üzeri)
+### Requirements
+- Flutter SDK (v3.0.0 or higher)
 - Android Studio / VS Code
-- Android veya iOS Simülatörü ya da fiziksel test cihazı
+- Android or iOS Simulator, or a physical test device
 
-### Çalıştırma Adımları
-1. Proje dizinine gidin:
-   ```bash
-   cd Fluxora
-   ```
-2. Bağımlılıkları yükleyin:
-   ```bash
-   flutter pub get
-   ```
-3. Uygulamayı başlatın:
-   ```bash
-   flutter run
-   ```
+### Running Steps
+1. Navigate to the project directory:
 
-### Testleri Çalıştırma
-Uygulama içindeki regex veri doğrulama mantığını test etmek için hazırlanan birim testlerini koşturabilirsiniz:
-```bash
-flutter test
-```
+       cd Fluxora
+
+2. Install dependencies:
+
+       flutter pub get
+
+3. Start the application:
+
+       flutter run
+
+### Running Tests
+You can run the unit tests prepared to test the regex data validation logic in the application:
+
+    flutter test
 
 ---
 
-## 🎨 Tasarım Estetiği ve Kullanıcı Deneyimi
-- **Tema Entegrasyonu:** SQLite destekli persistent Dark Mode / Light Mode geçişi.
-- **Renk Paletleri:** Her komite için özel HSL tonlarında tanımlanmış premium ve dinamik komite temaları.
-- **Ergonomi:** İlgili veri ekleme butonları, sayfa genelindeki dağınıklığı önlemek adına doğrudan ilişkili widget başlıklarına (Örn: "Organizasyon İhtiyaçları" ve "Katılım Takibi" başlıklarının yanına) taşınarak sezgisellik artırılmıştır.
+## 🎨 Design Aesthetics and User Experience
+- **Theme Integration:** SQLite-backed persistent Dark Mode / Light Mode switching.
+- **Color Palettes:** Premium and dynamic committee themes defined in unique HSL tones for each committee.
+- **Ergonomics:** Related data-adding buttons have been moved directly next to their associated widget titles (e.g., next to the "Organization Needs" and "Attendance Tracking" titles) to reduce clutter across the page and increase intuitiveness.
