@@ -29,11 +29,12 @@ To fully comply with academic project criteria, no external cloud service or com
 ### 3. Targeted Announcement Distribution System
 * **Announcement Management Panel:** The Campus Ambassador can publish and delete rich-content announcements addressed to the entire community ("All Committees") or to a specific committee (e.g., "Sponsorship & Business Development").
 * **Personalized Announcement Board:** When committee members enter their own panels, they encounter a horizontal ambassador announcements board at the top of the main screen, showing only current announcements relevant to their own committee or the whole club.
+
 <p align="center">
-<img width="229" height="474" alt="10" src="https://github.com/user-attachments/assets/fd58553e-59db-4635-8d36-328b98c11ab9" />
-<img width="229" height="474" alt="4" src="https://github.com/user-attachments/assets/b0dc8a33-0c3c-4754-be16-4970dd04c447" />
-<img width="229" height="474" alt="9" src="https://github.com/user-attachments/assets/8f9c9309-9ff0-4317-9403-4fb87b3ccf49" />
-<img width="229" height="474" alt="6" src="https://github.com/user-attachments/assets/ecccf3cd-1afc-46ef-91b0-adcd798b1790" />
+<img width="229" height="454" alt="10" src="https://github.com/user-attachments/assets/fd58553e-59db-4635-8d36-328b98c11ab9" />
+<img width="229" height="454" alt="4" src="https://github.com/user-attachments/assets/b0dc8a33-0c3c-4754-be16-4970dd04c447" />
+<img width="229" height="454" alt="9" src="https://github.com/user-attachments/assets/8f9c9309-9ff0-4317-9403-4fb87b3ccf49" />
+<img width="229" height="454" alt="6" src="https://github.com/user-attachments/assets/ecccf3cd-1afc-46ef-91b0-adcd798b1790" />
 </p>
 
 
