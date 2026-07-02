@@ -13,35 +13,66 @@ To fully comply with academic project criteria, no external cloud service or com
 * **Graphical Tracking:** Each committee's total task count, completed task count, and percentage-based success rates are tracked live with `LinearProgressIndicator` and custom visual designs.
 * **Interactive Filtering:** When a committee summary card on the leadership dashboard is tapped, the system automatically switches to the Tasks tab and filters the relevant committee.
 * **Central Task Pool:** An advanced task panel with search and committee filtering where tasks from all committees are listed on a single screen.
+<p align="center">
+  <img width="229" height="434" alt="2" src="https://github.com/user-attachments/assets/e666f95a-3c45-47a0-bb0b-b62c218fed5a" />
+</p>
 
 ### 2. Personalized Task Assignment System
 * **Dynamic Member List:** A member dropdown list (`DbHelper.getAllUsers()`) that dynamically pulls all members from the SQLite database is integrated into the task adding (`AddEventScreen`) and editing (`EditEventScreen`) screens.
+<p align="center">
+  <img width="229" height="434" alt="13" src="https://github.com/user-attachments/assets/bbd936fa-22a1-4d65-b338-4eba8f723aa1" />
+</p>
 * **Visual Assignment Cards:** Who a created task is assigned to (`assignedTo`) is displayed elegantly with profile-icon chips under the task cards.
-
+<p align="center">
+  <img width="229" height="434" alt="3" src="https://github.com/user-attachments/assets/ffde2bb7-45a5-4460-b1d1-5c8a145ea536" />
+</p>
 ### 3. Targeted Announcement Distribution System
 * **Announcement Management Panel:** The Campus Ambassador can publish and delete rich-content announcements addressed to the entire community ("All Committees") or to a specific committee (e.g., "Sponsorship & Business Development").
 * **Personalized Announcement Board:** When committee members enter their own panels, they encounter a horizontal ambassador announcements board at the top of the main screen, showing only current announcements relevant to their own committee or the whole club.
+<p align="center">
+<img width="229" height="474" alt="10" src="https://github.com/user-attachments/assets/fd58553e-59db-4635-8d36-328b98c11ab9" />
+<img width="229" height="474" alt="4" src="https://github.com/user-attachments/assets/b0dc8a33-0c3c-4754-be16-4970dd04c447" />
+<img width="229" height="474" alt="9" src="https://github.com/user-attachments/assets/8f9c9309-9ff0-4317-9403-4fb87b3ccf49" />
+<img width="229" height="474" alt="6" src="https://github.com/user-attachments/assets/ecccf3cd-1afc-46ef-91b0-adcd798b1790" />
+</p>
+
 
 ### 4. Summit & Event Attendance Tracking System (Full CRUD)
 * **Multiple Tracking Cards:** Dynamic attendance tracking cards can be created for summits and events.
 * **Live Progress Bars:** Occupancy rates and progress bars are automatically calculated when the registered attendee count and target maximum capacity are entered.
 * **Strict Validation:** The system prevents the registered attendee count from being negative, exceeding the maximum capacity, or the capacity being entered as zero/negative, and shows the user a SnackBar warning.
 * **Event Finished (Delete) Option:** Successfully completed events can be permanently deleted from the editing menu.
+<p align="center">
+  <img width="229" height="434" alt="7" src="https://github.com/user-attachments/assets/1c1a7ce8-b884-4f3d-9669-f05bf3598c80" />
+</p>
 
 ### 5. Advanced Committee-Specific Tools
 The application includes smart tools designed for the unique needs of each committee:
 * **Sponsorship & Business Development:**
   * *Sponsorship Package Calculator:* A CRUD-supported package simulator that dynamically calculates prices based on budget limits, social media posts, booth areas, and logo placements.
   * *Brand Negotiation List:* Data cards tracking the negotiation status of potential sponsor companies.
+<p align="center">
+    <img width="229" height="434" alt="9" src="https://github.com/user-attachments/assets/395ef1ff-dea5-4637-9463-1096cca4682f" />
+</p>
 * **Digital Media & Design:**
   * *Reels Draft Scoring Engine:* A smart algorithm that scores the viral potential (Viral Score) of Reels videos based on trending music usage, video duration, and hook strength.
   * *Weekly Content Calendar:* Status cards for visuals to be shared by day.
+<p align="center">
+ <img width="229" height="434" alt="11" src="https://github.com/user-attachments/assets/581dae32-7044-4f42-b012-8d4db2cdd992" />
+</p>
 * **Medium & YouTube (Publishing):**
   * *Live Stream Question Pool:* An interactive pool that compiles questions to be asked to stream guests by priority order and marks them as asked.
   * *YouTube Countdown Timer:* A timer engine that counts down live, second by second, to the planned live stream time.
+<p align="center">
+    <img width="229" height="434" alt="5" src="https://github.com/user-attachments/assets/f36f4bce-ce16-4b8c-acb3-73f2d69e37b2" />
+</p>
 * **Event & Organization:**
   * *Summit Duty Matrix:* A duty matrix showing which time slot and area (Welcoming, Sound, Backstage, etc.) each team member is on duty for on the day of the event.
   * *Organization Needs:* An event supplies and checklist management card.
+<p align="center">
+<img width="229" height="434" alt="8" src="https://github.com/user-attachments/assets/0acb4843-3793-4035-802d-02a4a8659f4a" />
+</p>
+
 
 ---
 
@@ -111,7 +142,9 @@ Default users and sample records have been automatically seeded into the databas
 | **Medium & YouTube** | `medium_uyesi1` | `1medium123` | Publishing and Live Stream Questions Pool |
 | **Sponsorship & Business Development** | `sponsorluk_uyesi` | `1sponsorluk123` | Sponsorship Package Calculator and Brand Negotiations |
 | **Event & Organization** | `etkinlik_uyesi` | `1etkinlik123` | Summit Duty Matrix and Organization Management |
-
+<p align="center">
+<img width="229" height="434" alt="1" src="https://github.com/user-attachments/assets/efcceafb-0b35-43ea-b88f-d6d865212777" />
+</p>
 ---
 
 ## 💻 Installation and Running
