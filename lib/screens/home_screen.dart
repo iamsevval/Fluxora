@@ -93,6 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CommitteeItem> _committeeYoutube = [];
   List<CommitteeItem> _committeeChecklist = [];
   List<CommitteeItem> _committeeCapacities = [];
+  List<CommitteeItem> _committeeYoutubeSpeakers = [];
+  List<CommitteeItem> _committeeMediumTopics = [];
 
   //  ARAÇ VERİLERİ (SQLite)
   List<SponsorshipPackage> _packages = [];
@@ -182,6 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final brands = await _dbHelper.getCommitteeItems(widget.committeeName, 'brand');
     final contents = await _dbHelper.getCommitteeItems(widget.committeeName, 'content');
     final youtube = await _dbHelper.getCommitteeItems(widget.committeeName, 'youtube');
+    final speakers = await _dbHelper.getCommitteeItems(widget.committeeName, 'youtube_speaker');
+    final topics = await _dbHelper.getCommitteeItems(widget.committeeName, 'medium_topic');
     final checklist = await _dbHelper.getCommitteeItems(widget.committeeName, 'checklist');
     
     var capacity = await _dbHelper.getCommitteeItems(widget.committeeName, 'summit_capacity');
@@ -196,6 +200,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _committeeBrands = brands;
         _committeeContents = contents;
         _committeeYoutube = youtube;
+        _committeeYoutubeSpeakers = speakers;
+        _committeeMediumTopics = topics;
         _committeeChecklist = checklist;
         _committeeCapacities = capacity;
         _packages = packages;
@@ -719,7 +725,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAddButtonForTools() {
-    if (widget.committeeName.contains('Medium') || widget.committeeName.contains('Etkinlik')) return const SizedBox(); 
+    if (widget.committeeName.contains('Etkinlik')) return const SizedBox(); 
 
     return IconButton(
       icon: Icon(Icons.add_circle, color: widget.committeeColor, size: 30),
@@ -728,6 +734,8 @@ class _HomeScreenState extends State<HomeScreen> {
           _showAddBrandDialog();
         } else if (widget.committeeName.contains('Dijital Medya')) {
           _showAddContentDialog();
+        } else if (widget.committeeName.contains('Medium')) {
+          _showAddMediumToolDialog();
         }
       },
     );
@@ -1950,6 +1958,149 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 15),
         
+        // KONUŞMACI GÖRÜŞMELERİ
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(20), border: Border.all(color: _isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.person_pin, color: Colors.redAccent),
+                      const SizedBox(width: 10),
+                      Text('Konuşmacı Adayları', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor)),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle, color: Colors.redAccent),
+                    onPressed: _showAddYoutubeSpeakerDialog,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Text('Düzenlemek için tıklayın, silmek için basılı tutun.', style: TextStyle(color: Colors.grey, fontSize: 11)),
+              const SizedBox(height: 15),
+              _committeeYoutubeSpeakers.isEmpty
+                  ? const Center(child: Text('Henüz konuşmacı adayı eklenmemiş.', style: TextStyle(color: Colors.grey, fontSize: 13)))
+                  : SizedBox(
+                      height: 85,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _committeeYoutubeSpeakers.length,
+                        itemBuilder: (context, index) {
+                          final item = _committeeYoutubeSpeakers[index];
+                          final colorVal = int.tryParse(item.statusColor) ?? 0xFF9E9E9E;
+                          return GestureDetector(
+                            onTap: () => _showEditYoutubeSpeakerDialog(item),
+                            onLongPress: () => _deleteYoutubeSpeakerConfirm(item),
+                            child: Container(
+                              width: 125,
+                              margin: const EdgeInsets.only(right: 12),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: _isDarkMode ? const Color(0xFF2C2C2C) : Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(color: _isDarkMode ? Colors.transparent : Colors.grey.shade200),
+                                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2))],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(item.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: textColor)),
+                                  const SizedBox(height: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(color: Color(colorVal).withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                                    child: Text(item.subtitle, style: TextStyle(color: Color(colorVal), fontSize: 10, fontWeight: FontWeight.bold)),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 15),
+
+        // MEDIUM KONU FİKİRLERİ
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(20), border: Border.all(color: _isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.article, color: Colors.redAccent),
+                      const SizedBox(width: 10),
+                      Text('Medium Konu Fikirleri', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor)),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle, color: Colors.redAccent),
+                    onPressed: _showAddMediumTopicDialog,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Text('Düzenlemek için tıklayın, silmek için basılı tutun.', style: TextStyle(color: Colors.grey, fontSize: 11)),
+              const SizedBox(height: 15),
+              _committeeMediumTopics.isEmpty
+                  ? const Center(child: Text('Henüz konu fikri eklenmemiş.', style: TextStyle(color: Colors.grey, fontSize: 13)))
+                  : SizedBox(
+                      height: 85,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _committeeMediumTopics.length,
+                        itemBuilder: (context, index) {
+                          final item = _committeeMediumTopics[index];
+                          final colorVal = int.tryParse(item.statusColor) ?? 0xFF9E9E9E;
+                          return GestureDetector(
+                            onTap: () => _showEditMediumTopicDialog(item),
+                            onLongPress: () => _deleteMediumTopicConfirm(item),
+                            child: Container(
+                              width: 135,
+                              margin: const EdgeInsets.only(right: 12),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: _isDarkMode ? const Color(0xFF2C2C2C) : Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(color: _isDarkMode ? Colors.transparent : Colors.grey.shade200),
+                                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2))],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: textColor)),
+                                  const SizedBox(height: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(color: Color(colorVal).withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                                    child: Text(item.subtitle, style: TextStyle(color: Color(colorVal), fontSize: 10, fontWeight: FontWeight.bold)),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 15),
         // CANLI YAYIN SORU HAVUZU VE MODERATÖRÜ 
         Container(
           width: double.infinity,
@@ -2019,6 +2170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: question.priority == 'Yüksek' ? Colors.red : Colors.grey,
                               ),
                             ),
+                            onTap: () => _showEditStreamQuestionDialog(question),
                             onLongPress: () => _deleteStreamQuestionConfirm(question),
                           ),
                         );
@@ -2051,6 +2203,330 @@ class _HomeScreenState extends State<HomeScreen> {
               if (mounted) Navigator.pop(context);
             },
             child: const Text('Sil/Sıfırla'),
+          ),
+        ],
+      ),
+    );
+  }
+  void _showAddMediumToolDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Ne Eklemek İstiyorsunuz?'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.person, color: Colors.redAccent),
+              title: const Text('YouTube Konuşmacısı'),
+              onTap: () {
+                Navigator.pop(context);
+                _showAddYoutubeSpeakerDialog();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.article, color: Colors.redAccent),
+              title: const Text('Medium Konu Fikri'),
+              onTap: () {
+                Navigator.pop(context);
+                _showAddMediumTopicDialog();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAddYoutubeSpeakerDialog() {
+    final titleController = TextEditingController();
+    String selectedStatus = 'Görüşülüyor';
+    String selectedColor = '0xFFFF9800'; 
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setStateSB) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Yeni Konuşmacı Ekle'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: 'Konuşmacı Adı', hintText: 'Örn: Ahmet Yılmaz'),
+                ),
+                const SizedBox(height: 15),
+                DropdownButtonFormField<String>(
+                  value: selectedStatus,
+                  decoration: const InputDecoration(labelText: 'Durum'),
+                  items: const [
+                    DropdownMenuItem(value: 'Görüşülüyor', child: Text('Görüşülüyor')),
+                    DropdownMenuItem(value: 'Onaylandı', child: Text('Onaylandı')),
+                    DropdownMenuItem(value: 'Reddedildi', child: Text('Reddedildi')),
+                  ],
+                  onChanged: (val) {
+                    setStateSB(() {
+                      selectedStatus = val!;
+                      if (val == 'Görüşülüyor') selectedColor = '0xFFFF9800';
+                      else if (val == 'Onaylandı') selectedColor = '0xFF4CAF50';
+                      else selectedColor = '0xFFF44336';
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('İptal')),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: widget.committeeColor),
+              onPressed: () async {
+                if (titleController.text.isEmpty) return;
+                final item = CommitteeItem(
+                  committee: widget.committeeName,
+                  type: 'youtube_speaker',
+                  title: titleController.text,
+                  subtitle: selectedStatus,
+                  statusColor: selectedColor,
+                );
+                await _dbHelper.insertCommitteeItem(item);
+                _refreshCommitteeItems();
+                if (mounted) Navigator.pop(context);
+              },
+              child: const Text('Ekle', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditYoutubeSpeakerDialog(CommitteeItem item) {
+    final titleController = TextEditingController(text: item.title);
+    String selectedStatus = item.subtitle;
+    String selectedColor = item.statusColor;
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setStateSB) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Konuşmacı Düzenle'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: 'Konuşmacı Adı'),
+                ),
+                const SizedBox(height: 15),
+                DropdownButtonFormField<String>(
+                  value: selectedStatus,
+                  decoration: const InputDecoration(labelText: 'Durum'),
+                  items: const [
+                    DropdownMenuItem(value: 'Görüşülüyor', child: Text('Görüşülüyor')),
+                    DropdownMenuItem(value: 'Onaylandı', child: Text('Onaylandı')),
+                    DropdownMenuItem(value: 'Reddedildi', child: Text('Reddedildi')),
+                  ],
+                  onChanged: (val) {
+                    setStateSB(() {
+                      selectedStatus = val!;
+                      if (val == 'Görüşülüyor') selectedColor = '0xFFFF9800';
+                      else if (val == 'Onaylandı') selectedColor = '0xFF4CAF50';
+                      else selectedColor = '0xFFF44336';
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('İptal')),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: widget.committeeColor),
+              onPressed: () async {
+                if (titleController.text.isEmpty) return;
+                item.title = titleController.text;
+                item.subtitle = selectedStatus;
+                item.statusColor = selectedColor;
+                await _dbHelper.updateCommitteeItem(item);
+                _refreshCommitteeItems();
+                if (mounted) Navigator.pop(context);
+              },
+              child: const Text('Kaydet', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _deleteYoutubeSpeakerConfirm(CommitteeItem item) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Konuşmacı Sil'),
+        content: Text('${item.title} adlı konuşmacıyı silmek istediğinize emin misiniz?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('İptal')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () async {
+              await _dbHelper.deleteCommitteeItem(item.id!);
+              _refreshCommitteeItems();
+              if (mounted) Navigator.pop(context);
+            },
+            child: const Text('Sil', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddMediumTopicDialog() {
+    final titleController = TextEditingController();
+    String selectedStatus = 'Fikir';
+    String selectedColor = '0xFF9E9E9E'; 
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setStateSB) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Yeni Medium Konusu'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: 'Konu Fikri', hintText: 'Örn: Flutter vs React Native'),
+                ),
+                const SizedBox(height: 15),
+                DropdownButtonFormField<String>(
+                  value: selectedStatus,
+                  decoration: const InputDecoration(labelText: 'Durum'),
+                  items: const [
+                    DropdownMenuItem(value: 'Fikir', child: Text('Fikir')),
+                    DropdownMenuItem(value: 'Yazılıyor', child: Text('Yazılıyor')),
+                    DropdownMenuItem(value: 'Yayınlandı', child: Text('Yayınlandı')),
+                  ],
+                  onChanged: (val) {
+                    setStateSB(() {
+                      selectedStatus = val!;
+                      if (val == 'Fikir') selectedColor = '0xFF9E9E9E';
+                      else if (val == 'Yazılıyor') selectedColor = '0xFFFF9800';
+                      else selectedColor = '0xFF4CAF50';
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('İptal')),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: widget.committeeColor),
+              onPressed: () async {
+                if (titleController.text.isEmpty) return;
+                final item = CommitteeItem(
+                  committee: widget.committeeName,
+                  type: 'medium_topic',
+                  title: titleController.text,
+                  subtitle: selectedStatus,
+                  statusColor: selectedColor,
+                );
+                await _dbHelper.insertCommitteeItem(item);
+                _refreshCommitteeItems();
+                if (mounted) Navigator.pop(context);
+              },
+              child: const Text('Ekle', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditMediumTopicDialog(CommitteeItem item) {
+    final titleController = TextEditingController(text: item.title);
+    String selectedStatus = item.subtitle;
+    String selectedColor = item.statusColor;
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setStateSB) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Konu Düzenle'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: 'Konu Fikri'),
+                ),
+                const SizedBox(height: 15),
+                DropdownButtonFormField<String>(
+                  value: selectedStatus,
+                  decoration: const InputDecoration(labelText: 'Durum'),
+                  items: const [
+                    DropdownMenuItem(value: 'Fikir', child: Text('Fikir')),
+                    DropdownMenuItem(value: 'Yazılıyor', child: Text('Yazılıyor')),
+                    DropdownMenuItem(value: 'Yayınlandı', child: Text('Yayınlandı')),
+                  ],
+                  onChanged: (val) {
+                    setStateSB(() {
+                      selectedStatus = val!;
+                      if (val == 'Fikir') selectedColor = '0xFF9E9E9E';
+                      else if (val == 'Yazılıyor') selectedColor = '0xFFFF9800';
+                      else selectedColor = '0xFF4CAF50';
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('İptal')),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: widget.committeeColor),
+              onPressed: () async {
+                if (titleController.text.isEmpty) return;
+                item.title = titleController.text;
+                item.subtitle = selectedStatus;
+                item.statusColor = selectedColor;
+                await _dbHelper.updateCommitteeItem(item);
+                _refreshCommitteeItems();
+                if (mounted) Navigator.pop(context);
+              },
+              child: const Text('Kaydet', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _deleteMediumTopicConfirm(CommitteeItem item) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Konu Sil'),
+        content: Text('${item.title} adlı konuyu silmek istediğinize emin misiniz?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('İptal')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () async {
+              await _dbHelper.deleteCommitteeItem(item.id!);
+              _refreshCommitteeItems();
+              if (mounted) Navigator.pop(context);
+            },
+            child: const Text('Sil', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -2377,6 +2853,71 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
               child: const Text('Ekle'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditStreamQuestionDialog(StreamQuestion question) {
+    final guestController = TextEditingController(text: question.guestName);
+    final questionerController = TextEditingController(text: question.questioner);
+    final questionController = TextEditingController(text: question.questionText);
+    String priority = question.priority;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Soru Düzenle'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: guestController,
+                decoration: const InputDecoration(labelText: 'Konuşmacı/Konuk Adı'),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: questionerController,
+                decoration: const InputDecoration(labelText: 'Soruyu Soran Chat Adı'),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: questionController,
+                decoration: const InputDecoration(labelText: 'Konuğa Yöneltilecek Soru'),
+              ),
+              const SizedBox(height: 15),
+              DropdownButtonFormField<String>(
+                value: priority,
+                items: ['Yüksek', 'Orta', 'Düşük'].map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                onChanged: (val) => setDialogState(() => priority = val!),
+                decoration: const InputDecoration(labelText: 'Soru Öncelik Derecesi'),
+              )
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('İptal')),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white),
+              onPressed: () async {
+                final qText = questionController.text.trim();
+                final name = questionerController.text.trim();
+                if (qText.isNotEmpty && name.isNotEmpty) {
+                  question.guestName = guestController.text.trim();
+                  question.questioner = name;
+                  question.questionText = qText;
+                  question.priority = priority;
+                  await _dbHelper.updateStreamQuestion(question);
+                  _refreshCommitteeItems();
+                  if (mounted) Navigator.pop(context);
+                } else {
+                  _showErrorSnackBar('Lütfen boş alan bırakmayın.');
+                }
+              },
+              child: const Text('Kaydet'),
             )
           ],
         ),
