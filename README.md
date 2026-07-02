@@ -65,22 +65,25 @@ The application includes smart tools designed for the unique needs of each commi
 * **Digital Media & Design:**
   * *Reels Draft Scoring Engine:* A smart algorithm that scores the viral potential (Viral Score) of Reels videos based on trending music usage, video duration, and hook strength.
   * *Weekly Content Calendar:* Status cards for visuals to be shared by day.
+  <br>
 <p align="center">
  <img width="229" height="434" alt="11" src="https://github.com/user-attachments/assets/581dae32-7044-4f42-b012-8d4db2cdd992" />
 </p>
 * **Medium & YouTube (Publishing):**
   * *Live Stream Question Pool:* An interactive pool that compiles questions to be asked to stream guests by priority order and marks them as asked.
   * *YouTube Countdown Timer:* A timer engine that counts down live, second by second, to the planned live stream time.
+  <br>
 <p align="center">
     <img width="229" height="434" alt="5" src="https://github.com/user-attachments/assets/f36f4bce-ce16-4b8c-acb3-73f2d69e37b2" />
 </p>
 * **Event & Organization:**
   * *Summit Duty Matrix:* A duty matrix showing which time slot and area (Welcoming, Sound, Backstage, etc.) each team member is on duty for on the day of the event.
   * *Organization Needs:* An event supplies and checklist management card.
+  <br>
+  <br>
 <p align="center">
 <img width="229" height="434" alt="8" src="https://github.com/user-attachments/assets/0acb4843-3793-4035-802d-02a4a8659f4a" />
 </p>
-
 
 ---
 
